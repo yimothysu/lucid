@@ -120,7 +120,7 @@ export default function Video() {
 
   function onGetQA() {
     return getVideoQuestionAnswer(id, elapsedTime).then((data) => {
-      setquestionAnswerPairsResp(data);
+      //   setquestionAnswerPairsResp(data);
     });
   }
 
@@ -198,7 +198,7 @@ export default function Video() {
         }}
         className={styles.showQuestions}
       />
-      {questionResp &&
+      {/* {questionResp &&
         questionResp.length === answerResp.length &&
         questionResp.map((question, index) => {
           return (
@@ -208,7 +208,7 @@ export default function Video() {
               answer={answerResp[index]}
             />
           );
-        })}
+        })} */}
     </main>
   );
 }
