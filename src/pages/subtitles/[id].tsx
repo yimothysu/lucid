@@ -1,18 +1,13 @@
 'use client'
-import {useEffect} from "react"
+import {useEffect, useState} from "react"
 import { useParams } from "next/navigation";
 
 export default function Subtitles () {
     
     const params = useParams()
+    
+    const [subtitles, setSubtitles] = useState(null);
 
-    if (!params || Array.isArray(params)) {
-        return (
-            <div>
-
-            </div>
-        )
-    }
 
     useEffect(() => {
         const fetchSubtitles = async (videoID = 'FSmCaprEcQM', lang = 'en') => {
@@ -23,6 +18,7 @@ export default function Subtitles () {
             console.log("Here!")
             const data = await response.json();
             console.log(data);
+            setSubtitles(data);
             // setSubtitles(data.subtitles);
             // setVideoDetails(data.videoDetails);
           } catch (error) {
@@ -35,7 +31,15 @@ export default function Subtitles () {
 
     return (
         <div>
-            So What is a man
+            {subtitles ? (
+        <div>
+          <h1>Subtitles</h1>
+          <p>Subtitle 1: {JSON.stringify(subtitles)}</p>
+          {/* Render other properties from data */}
+        </div>
+      ) : (
+        <p>Loading subtitles...</p>
+      )}
         </div>
     )
 }
