@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import theme from "@/app/styles/theme";
 import FeatherIcon from "feather-icons-react";
+import Image from "next/image";
 import "@/app/globals.css";
 
 const { colors } = theme;
@@ -17,7 +18,8 @@ const YouTubeLinkInput = () => {
       link.startsWith("https://www.youtube.com/")
     ) {
       const suffix = link.split("/").pop();
-      const id = suffix?.split("v=")[1];
+      const suffix2 = suffix?.split("v=")[1];
+      const id = suffix2?.split("&")[0];
       router.push(`/videos/${id}`);
     } else {
       alert("Please provide a valid YouTube link.");
@@ -27,6 +29,7 @@ const YouTubeLinkInput = () => {
 
   return (
     <div className="container">
+      <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
       <div className="title">Paste YouTube Link Here</div>
       <form className="inputs" onSubmit={handleSubmit}>
         <input
@@ -51,22 +54,22 @@ const YouTubeLinkInput = () => {
         }
 
         .title {
-          font-size: 1.3em;
-          margin-bottom: 1rem;
+          font-size: 1.5rem;
+          margin-bottom: 1.5rem;
           color: ${colors.text};
         }
 
         .inputs {
           display: flex;
-          height: 2.5rem;
+          height: 3rem;
         }
 
         .link-input {
           padding: 0.5rem;
           border-radius: 0;
           border: none;
-          font-size: 1rem;
-          width: min(90vw, 300px);
+          font-size: 1.25rem;
+          width: min(90vw, 400px);
           height: 100%;
         }
 
@@ -78,7 +81,9 @@ const YouTubeLinkInput = () => {
           color: white;
           background-color: ${colors.background};
           padding: 0.5rem 1rem;
+          padding-top: 0.7rem;
           height: 100%;
+          vertical-align: middle;
         }
 
         .submitButton:hover {

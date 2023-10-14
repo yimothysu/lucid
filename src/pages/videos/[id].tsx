@@ -6,6 +6,7 @@ import {
   addVideoQuestion,
   getVideoQuestionAnswer,
 } from "@/app/firebase/firestore";
+import "@/app/globals.css";
 
 interface QuestionAndAnswerProps {
   question: string;
