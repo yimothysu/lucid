@@ -1,6 +1,4 @@
 "use client";
-
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "./video.module.css";
@@ -86,20 +84,30 @@ export default function Video() {
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
-  const router: any = useParams();
-
-  const { id } = router;
+  const router = useRouter();
+  const { id } = router.query;
+  const videoId = id;
 
   useEffect(() => {
-    getVideoTimeStamps(id).then((data) => {
+    if (!videoId || Array.isArray(videoId)) {
+      return;
+    }
+    getVideoTimeStamps(videoId).then((data) => {
       setTimeStamps(data);
     });
-  }, []);
+  }, [videoId]);
+
+  if (!videoId) {
+    return <main className={styles.main}></main>;
+  }
 
   const onSubmit = (e: any) => {
     e.preventDefault();
+    if (!videoId || Array.isArray(videoId)) {
+      return;
+    }
     addVideoQuestion({
-      videoId: id,
+      videoId: videoId,
       question,
       answer,
       timestamp: elapsedTime,
@@ -182,7 +190,7 @@ export default function Video() {
         timeStamps.map((pair, index) => {
           return (
             <QuestionAndAnswer
-              key={`${question} ${index}`}
+              key={`${index}`}
               question={pair.question}
               answer={pair.answer}
             />
