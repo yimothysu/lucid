@@ -15,12 +15,18 @@ type subItems = {
 export default function Subtitles () {
     
     const params = useParams()
+
+
+    if (!params) {
+        return <div>Loading...</div>;
+    }
+    const { id } = params;
     
     const [subtitles, setSubtitles] = useState<subItems>();
 
 
     useEffect(() => {
-        const fetchSubtitles = async (videoID = 'hUGzo8v7gHk', lang = 'en') => {
+        const fetchSubtitles = async (videoID = id, lang = 'en') => {
           try {
             const response = await fetch(
               `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
