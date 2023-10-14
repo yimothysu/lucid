@@ -1,11 +1,12 @@
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "./video.module.css";
 import { ArrowRight } from "react-feather";
 import {
   addVideoQuestion,
   getVideoQuestionAnswer,
+  getVideoTimeStamps,
 } from "@/app/firebase/firestore";
 import "@/app/globals.css";
 import { QuestionAnswerPair } from "@/app/firebase/types";
@@ -33,6 +34,7 @@ interface ProgressBarProps {
   duration: number;
   onTimestampClick: (timestamp: Timestamp) => void;
   setProgress: (progress: number) => void;
+  timeStampItems: Timestamp[];
 }
 
 interface Timestamp {
@@ -42,14 +44,6 @@ interface Timestamp {
 }
 
 function ProgressBar(props: ProgressBarProps) {
-  const [timestamps, setTimestamps] = useState<Timestamp[]>([
-    {
-      timestamp: 100,
-      question: "What is the meaning of life?",
-      answer: "42",
-    },
-  ]);
-
   return (
     <div
       className={styles.progressBar}
@@ -65,7 +59,7 @@ function ProgressBar(props: ProgressBarProps) {
         className={styles.progressBar__elapsed}
         style={{ width: (props.progress / props.duration) * 100 + "%" }}
       ></div>
-      {timestamps.map((timestamp) => (
+      {props.timeStampItems.map((timestamp) => (
         <div
           key={timestamp.timestamp}
           className={styles.timestamp}
@@ -92,21 +86,21 @@ export default function Video() {
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
 
-  const [questionAnswerPairsResp, setquestionAnswerPairsResp] = useState<
-    QuestionAnswerPair[]
-  >([]);
+  const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
-  const params = useParams();
+  const params: any = useParams();
+
+  const { id } = params;
+
+  useEffect(() => {
+    getVideoTimeStamps(id).then((data) => {
+      setTimeStamps(data);
+    });
+  }, []);
 
   if (!params) {
     return <div>Loading...</div>;
   }
-
-  if (Array.isArray(params.id)) {
-    return <div>WTF</div>;
-  }
-
-  const { id } = params;
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -115,7 +109,12 @@ export default function Video() {
       question,
       answer,
       timestamp: elapsedTime,
-    }).then(() => {});
+    }).then(() => {
+      setTimeStamps([
+        ...timeStamps,
+        { timestamp: elapsedTime, question, answer },
+      ]);
+    });
   };
 
   function onGetQA() {
@@ -158,6 +157,7 @@ export default function Video() {
             duration={duration}
             onTimestampClick={onTimestampClick}
             setProgress={setProgress}
+            timeStampItems={timeStamps}
           />
         </div>
         <div className={styles.currentQuestionSection}>
@@ -198,17 +198,16 @@ export default function Video() {
         }}
         className={styles.showQuestions}
       />
-      {/* {questionResp &&
-        questionResp.length === answerResp.length &&
-        questionResp.map((question, index) => {
+      {timeStamps &&
+        timeStamps.map((pair, index) => {
           return (
             <QuestionAndAnswer
               key={`${question} ${index}`}
-              question={question}
-              answer={answerResp[index]}
+              question={pair.question}
+              answer={pair.answer}
             />
           );
-        })} */}
+        })}
     </main>
   );
 }

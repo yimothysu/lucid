@@ -8,4 +8,9 @@ export type addVideoType = {
 export type QuestionAnswerPair = {
   question: string;
   answer: string;
+  timestamp: number;
+};
+
+export type QuestionAnswerPairs = {
+  questionAnswerPairs: QuestionAnswerPair[];
 };
