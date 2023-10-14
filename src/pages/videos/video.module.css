@@ -1,0 +1,15 @@
+.question {
+    font-weight: bold;
+}
+
+.questionText {
+    padding-bottom: 0.5rem;
+}
+
+.answer {
+    font-weight: bold;
+}
+
+.answerText {
+    padding-bottom: 0.5rem;
+}
