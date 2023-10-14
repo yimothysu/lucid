@@ -86,8 +86,9 @@ export default function Video() {
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
-  const router = useRouter();
-  const id = router.query.id;
+  const router: any = useParams();
+
+  const { id } = router;
 
   useEffect(() => {
     getVideoTimeStamps(id).then((data) => {

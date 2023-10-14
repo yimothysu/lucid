@@ -37,32 +37,6 @@ export async function getVideoTimeStamps(videoId: string) {
   return questionAnswerPairs.questionAnswerPairs;
 }
 
-export async function getVideoQuestionAnswer(
-  videoId: string,
-  timestamp: number
-) {
-  if (
-    !(await checkIfExists(`videos/${videoId}/timestamps`, timestamp.toString()))
-  ) {
-    return {
-      question: [],
-      answer: [],
-    };
-  }
-
-  // get collection reference
-  const collectionRef = collection(doc(db, "videos", videoId), "timestamps");
-
-  // get document reference
-  const docRef = doc(collectionRef, timestamp.toString());
-
-  // get document snapshot
-  const docSnap = await getDoc(docRef);
-
-  // return document data
-  return docSnap.data() as QuestionAnswerPair;
-}
-
 export async function addVideoQuestion(addVideoObj: addVideoType) {
   // check if videoId exists
   const exists = await checkIfExists("videos", addVideoObj.videoId);
