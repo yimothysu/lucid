@@ -1,5 +1,10 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import theme from "@/app/styles/theme";
+import FeatherIcon from "feather-icons-react";
+import "@/app/globals.css";
+
+const { colors } = theme;
 
 const YouTubeLinkInput = () => {
   const [link, setLink] = useState("");
@@ -22,8 +27,8 @@ const YouTubeLinkInput = () => {
 
   return (
     <div className="container">
-      <form className="container" onSubmit={handleSubmit}>
-        <label className="title">Paste YouTube Link Here</label>
+      <div className="title">Paste YouTube Link Here</div>
+      <form className="inputs" onSubmit={handleSubmit}>
         <input
           className="link-input"
           type="text"
@@ -31,7 +36,9 @@ const YouTubeLinkInput = () => {
           onChange={(e) => setLink(e.target.value)}
           placeholder="https://youtube.com/..."
         />
-        <input className="submitButton" type="submit" value="Go" />
+        <button className="submitButton" type="submit">
+          <FeatherIcon icon="arrow-right" />
+        </button>
       </form>
       <style jsx>{`
         .container {
@@ -40,35 +47,42 @@ const YouTubeLinkInput = () => {
           justify-content: center;
           align-items: center;
           min-height: 100vh;
+          background-color: ${colors.primary};
         }
 
         .title {
           font-size: 1.3em;
-          font-family: sans-serif;
           margin-bottom: 1rem;
+          color: ${colors.text};
+        }
+
+        .inputs {
+          display: flex;
+          height: 2.5rem;
         }
 
         .link-input {
-          width: 80%;
           padding: 0.5rem;
-          border-radius: 0.5rem;
-          border: 1px solid black;
-          margin-bottom: 1rem;
+          border-radius: 0;
+          border: none;
+          font-size: 1rem;
+          width: min(90vw, 300px);
+          height: 100%;
         }
 
         .submitButton {
           // Remove default button styles
           border: none;
-          outline: none;
-          background: none;
           cursor: pointer;
-          font-family: sans-serif;
-          font-size: 1em;
+          font-size: 1rem;
           color: white;
-          background-color: black;
+          background-color: ${colors.background};
           padding: 0.5rem 1rem;
-          border-radius: 0.5rem;
-          width: 80%;
+          height: 100%;
+        }
+
+        .submitButton:hover {
+          background-color: ${colors.backgroundHover};
         }
       `}</style>
     </div>

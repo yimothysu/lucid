@@ -10,10 +10,11 @@ const theme = {
     border: "#ddd",
     warning: "#fff3cd",
     success: "#d4edda",
-    primary: "98EECC",
-    secondary: "D0F5BE",
-    background: "A4907C",
-    contrast: "FBFFDC",
+    primary: "#98EECC",
+    secondary: "#D0F5BE",
+    background: "#A4907C",
+    backgroundHover: "#b8a797",
+    contrast: "#FBFFDC",
   },
 };
 
