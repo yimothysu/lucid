@@ -22,20 +22,29 @@ type Card = {
 
 type CardProps = Card;
 
-function Card(props: CardProps) {
+function Card(props: CardProps & { id: number }) {
   return (
-    <div className={styles.cardContainer}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={getThumbnailUrl(props.videoId)}
-        alt={`Video for ${props.title}`}
-        width={240}
-        height={135}
-      />
-      <div className={styles.cardTitle}>{props.title}</div>
-      <div className={styles.cardSampleQuestion}>Q: {props.sampleQuestion}</div>
-      <div className={styles.cardSampleAnswer}>A: {props.sampleAnswer}</div>
-    </div>
+    <motion.div
+      // Fade in
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: props.id }}
+    >
+      <div className={styles.cardContainer}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={getThumbnailUrl(props.videoId)}
+          alt={`Video for ${props.title}`}
+          width={240}
+          height={135}
+        />
+        <div className={styles.cardTitle}>{props.title}</div>
+        <div className={styles.cardSampleQuestion}>
+          Q: {props.sampleQuestion}
+        </div>
+        <div className={styles.cardSampleAnswer}>A: {props.sampleAnswer}</div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -130,9 +139,9 @@ export default function Home() {
       <Image src="/logo-v0.png" alt="logo" width={200} height={200} />
       <h1>Education reimagined, one lecture at a time.</h1>
       <div className={styles.cardsGrid}>
-        {cards.map((card) => (
+        {cards.map((card, index) => (
           <a href={`/videos/${card.videoId}`} key={card.videoId}>
-            <Card {...card} />
+            <Card id={index} {...card} />
           </a>
         ))}
       </div>
