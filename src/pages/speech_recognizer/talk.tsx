@@ -46,11 +46,14 @@ export default function Home() {
                   },
                   body: JSON.stringify({ audio: base64Audio }),
                 });
+                console.log("here1")
                 const data = await response.json();
+                console.log(data)
+                console.log("here2")
                 if (response.status !== 200) {
                   throw data.error || new Error(`Request failed with status ${response.status}`);
                 }
-                setResult(data.result);
+                setResult(data.message);
                 }
                 else
                 {
