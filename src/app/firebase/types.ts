@@ -5,7 +5,7 @@ export type addVideoType = {
   answer: string;
 };
 
-export type getVideoQuestionAnswerType = {
-  question: string[];
-  answer: string[];
+export type QuestionAnswerPair = {
+  question: string;
+  answer: string;
 };

@@ -5,8 +5,9 @@ import {
   getFirestore,
   setDoc,
   collection,
+  getDocs,
 } from "firebase/firestore";
-import { addVideoType, getVideoQuestionAnswerType } from "./types";
+import { addVideoType, QuestionAnswerPair } from "./types";
 
 export const db = getFirestore(app);
 
@@ -21,6 +22,25 @@ export async function checkIfExists(collection: string, id: string) {
   } else {
     return false;
   }
+}
+
+export async function getVideoQuestions(videoId: string) {
+  if (!(await checkIfExists("videos", videoId))) {
+    return [];
+  }
+
+  // get all values from collection
+  const collectionSnapshot = await getDocs(
+    collection(doc(db, "videos", videoId), "timestamps")
+  );
+
+  const questionAnswer: QuestionAnswerPair[] = [];
+
+  collectionSnapshot.forEach((doc) => {
+    questionAnswer.push(doc.data() as QuestionAnswerPair);
+  });
+
+  return questionAnswer;
 }
 
 export async function getVideoQuestionAnswer(
@@ -46,7 +66,7 @@ export async function getVideoQuestionAnswer(
   const docSnap = await getDoc(docRef);
 
   // return document data
-  return docSnap.data() as getVideoQuestionAnswerType;
+  return docSnap.data() as QuestionAnswerPair;
 }
 
 export async function addVideoQuestion(addVideoObj: addVideoType) {
@@ -69,12 +89,17 @@ export async function addVideoQuestion(addVideoObj: addVideoType) {
   getDoc(docRef)
     .then((docSnap) => {
       if (docSnap.exists()) {
-        const data = docSnap.data() as getVideoQuestionAnswerType;
+        const data = docSnap.data() as QuestionAnswerPair[];
         setDoc(
           docRef,
           {
-            question: [...data.question, addVideoObj.question],
-            answer: [...data.answer, addVideoObj.answer],
+            questionAnswerPairs: [
+              ...data,
+              {
+                question: addVideoObj.question,
+                answer: addVideoObj.answer,
+              },
+            ],
           },
           { merge: true }
         );

@@ -2,12 +2,13 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "./video.module.css";
-import feather from "feather-icons";
+import { ArrowRight } from "react-feather";
 import {
   addVideoQuestion,
   getVideoQuestionAnswer,
 } from "@/app/firebase/firestore";
 import "@/app/globals.css";
+import { QuestionAnswerPair } from "@/app/firebase/types";
 
 const PROGRESS_INTERVAL_MS = 500;
 
@@ -91,8 +92,9 @@ export default function Video() {
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
 
-  const [questionResp, setQuestionResp] = useState<string[]>([]);
-  const [answerResp, setAnswerResp] = useState<string[]>([]);
+  const [questionAnswerPairsResp, setquestionAnswerPairsResp] = useState<
+    QuestionAnswerPair[]
+  >([]);
 
   const params = useParams();
 
@@ -118,8 +120,7 @@ export default function Video() {
 
   function onGetQA() {
     return getVideoQuestionAnswer(id, elapsedTime).then((data) => {
-      setQuestionResp(data.question);
-      setAnswerResp(data.answer);
+      setquestionAnswerPairsResp(data);
     });
   }
 
@@ -186,10 +187,7 @@ export default function Video() {
           placeholder="Question"
         />
         <button type="submit" className={styles.questionSubmit}>
-          {feather.icons["arrow-right"].toSvg({
-            width: 20,
-            height: 20,
-          })}
+          <ArrowRight />
         </button>
       </form>
       <input
