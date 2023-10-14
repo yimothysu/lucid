@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { FormEventHandler, useState } from 'react';
 
 const YouTubeLinkInput = () => {
     const [link, setLink] = useState('');
 
-    const handleSubmit = () => {
+    const router = useRouter();
+
+    const handleSubmit = (e: any) => {
         if (link.startsWith('https://youtube.com/') || link.startsWith('https://www.youtube.com/')) {
-            window.open(link, '_blank'); // Opens the link in a new tab
+            const suffix = link.split('/').pop();  
+            const id = suffix?.split('v=')[1];
+            router.push(`/videos/${id}`);
         } else {
             alert('Please provide a valid YouTube link.');
         }
+        e.preventDefault();
     }
 
     return (
-        <div>
+        <form onSubmit={handleSubmit}>
             <label>
                 Paste YouTube Link Here
                 <input 
@@ -22,8 +28,8 @@ const YouTubeLinkInput = () => {
                     placeholder="https://youtube.com/..."
                 />
             </label>
-            <button onClick={handleSubmit}>Go</button>
-        </div>
+            <input type="submit" value="Go" />
+        </form>
     );
 }
 
