@@ -1,20 +1,99 @@
+.main {
+  background-color: #fbffdc;
+  min-height: 100vh;
+}
+
 .question {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .questionText {
-    padding-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .answer {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .answerText {
-    padding-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
-.answerForm {
-    display: flex;
-    flex-direction: column;
+.questionForm {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.questionLabel {
+  font-weight: bold;
+  padding-bottom: 0.5rem;
+}
+
+.questionInput {
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.questionSubmit {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #a4907c;
+  color: white;
+  width: min-content;
+  cursor: pointer;
+}
+
+.questionSubmit:hover {
+  background-color: #b8a797;
+}
+
+.videoSection {
+  width: 50%;
+}
+
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 1rem;
+  background-color: gray;
+  cursor: pointer;
+}
+
+.progressBar__elapsed {
+  position: absolute;
+  height: 1rem;
+  background-color: red;
+}
+
+.timestamp {
+  position: absolute;
+  width: 0.5rem;
+  height: 1rem;
+  background-color: orange;
+}
+
+.timestamp:hover {
+  background-color: darkorange;
+  cursor: pointer;
+}
+
+.currentQuestionSection {
+  width: 50%;
+  padding-left: 1rem;
+}
+
+.currentQuestion {
+  font-weight: bold;
+}
+
+.currentAnswer {
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.topPart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
