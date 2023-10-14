@@ -5,7 +5,7 @@ interface YouTubeVideoProps {
 }
 
 function YouTubeVideo(props: YouTubeVideoProps) {
-    return <iframe width="560" height="315" src={`https://www.youtube.com/embed/${props.id}`} frameBorder="0" allowFullScreen></iframe>
+    return <iframe width="560" height="315" src={`https://www.youtube.com/embed/${props.videoId}`} frameBorder="0" allowFullScreen></iframe>
 }
 
 export default function Video() {
