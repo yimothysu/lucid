@@ -7,7 +7,7 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
-import { addVideoType, QuestionAnswerPair } from "./types";
+import { addVideoType, QuestionAnswerPair, QuestionAnswerPairs } from "./types";
 
 export const db = getFirestore(app);
 
@@ -24,23 +24,17 @@ export async function checkIfExists(collection: string, id: string) {
   }
 }
 
-export async function getVideoQuestions(videoId: string) {
+export async function getVideoTimeStamps(videoId: string) {
   if (!(await checkIfExists("videos", videoId))) {
     return [];
   }
 
   // get all values from collection
-  const collectionSnapshot = await getDocs(
-    collection(doc(db, "videos", videoId), "timestamps")
-  );
+  const collectionSnapshot = await getDoc(doc(db, "videos", videoId));
 
-  const questionAnswer: QuestionAnswerPair[] = [];
+  const questionAnswerPairs = collectionSnapshot.data() as QuestionAnswerPairs;
 
-  collectionSnapshot.forEach((doc) => {
-    questionAnswer.push(doc.data() as QuestionAnswerPair);
-  });
-
-  return questionAnswer;
+  return questionAnswerPairs.questionAnswerPairs;
 }
 
 export async function getVideoQuestionAnswer(
@@ -74,41 +68,26 @@ export async function addVideoQuestion(addVideoObj: addVideoType) {
   const exists = await checkIfExists("videos", addVideoObj.videoId);
   if (!exists) {
     // add videoId to videos collection
-    await setDoc(doc(db, "videos", addVideoObj.videoId), {});
+    await setDoc(doc(db, "videos", addVideoObj.videoId), {
+      questionAnswerPairs: [],
+    });
   }
 
   // get collection reference
-  const collectionRef = collection(
-    doc(db, "videos", addVideoObj.videoId),
-    "timestamps"
-  );
+  const documentReference = doc(db, "videos", addVideoObj.videoId);
 
-  // add question as a document to timestamps collection with id set to timestamp
-  const docRef = doc(collectionRef, addVideoObj.timestamp.toString());
-
-  getDoc(docRef)
+  getDoc(documentReference)
     .then((docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data() as QuestionAnswerPair[];
-        setDoc(
-          docRef,
-          {
-            questionAnswerPairs: [
-              ...data,
-              {
-                question: addVideoObj.question,
-                answer: addVideoObj.answer,
-              },
-            ],
-          },
-          { merge: true }
-        );
-      } else {
-        setDoc(docRef, {
-          question: [addVideoObj.question],
-          answer: [addVideoObj.answer],
-        });
-      }
+      const data = docSnap.data() as QuestionAnswerPairs;
+      const questionAnswerPairs = data.questionAnswerPairs;
+      questionAnswerPairs.push({
+        question: addVideoObj.question,
+        answer: addVideoObj.answer,
+        timestamp: addVideoObj.timestamp,
+      });
+      setDoc(documentReference, {
+        questionAnswerPairs: questionAnswerPairs,
+      });
     })
     .catch((error) => {
       console.log(error);
