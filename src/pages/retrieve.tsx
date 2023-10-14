@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { FormEventHandler, useState } from "react";
+import React, { useState } from "react";
 
 const YouTubeLinkInput = () => {
   const [link, setLink] = useState("");
