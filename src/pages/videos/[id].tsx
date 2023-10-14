@@ -1,15 +1,13 @@
+"use client";
+
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "./video.module.css";
 import { ArrowRight } from "react-feather";
-import {
-  addVideoQuestion,
-  getVideoQuestionAnswer,
-  getVideoTimeStamps,
-} from "@/app/firebase/firestore";
+import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
-import { QuestionAnswerPair } from "@/app/firebase/types";
+import { useRouter } from "next/router";
 
 const PROGRESS_INTERVAL_MS = 500;
 
@@ -88,19 +86,14 @@ export default function Video() {
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
-  const params: any = useParams();
-
-  const { id } = params;
+  const router = useRouter();
+  const id = router.query.id;
 
   useEffect(() => {
     getVideoTimeStamps(id).then((data) => {
       setTimeStamps(data);
     });
   }, []);
-
-  if (!params) {
-    return <div>Loading...</div>;
-  }
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -116,12 +109,6 @@ export default function Video() {
       ]);
     });
   };
-
-  function onGetQA() {
-    return getVideoQuestionAnswer(id, elapsedTime).then((data) => {
-      //   setquestionAnswerPairsResp(data);
-    });
-  }
 
   const onReady = (player: any) => {
     setDuration(player.getDuration());
@@ -190,14 +177,6 @@ export default function Video() {
           <ArrowRight />
         </button>
       </form>
-      <input
-        type="button"
-        value="Show Questions"
-        onClick={() => {
-          onGetQA();
-        }}
-        className={styles.showQuestions}
-      />
       {timeStamps &&
         timeStamps.map((pair, index) => {
           return (
