@@ -12,6 +12,7 @@
     "@types/feather-icons": "^4.29.2",
     "feather-icons": "^4.29.1",
     "firebase": "^10.5.0",
+    "framer-motion": "^10.16.4",
     "next": "13.5.4",
     "node-fetch": "^3.3.2",
     "react": "^18",

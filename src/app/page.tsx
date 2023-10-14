@@ -1,8 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./page.module.css";
 import { ArrowRight } from "react-feather";
 import theme from "./styles/theme";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 function getThumbnailUrl(videoId: string) {
   return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
@@ -35,6 +40,10 @@ function Card(props: CardProps) {
 }
 
 export default function Home() {
+  const [animateBackground, setAnimateBackground] = useState(false);
+
+  const router = useRouter();
+
   const cards: Card[] = [
     {
       title: "Never Gonna Give You Up",
@@ -122,18 +131,37 @@ export default function Home() {
       <h1>Education reimagined, one lecture at a time.</h1>
       <div className={styles.cardsGrid}>
         {cards.map((card) => (
-          <a
-            key={`${card.videoId} ${card.sampleQuestion}`}
-            href={`/videos/${card.videoId}`}
-          >
+          <a href={`/videos/${card.videoId}`} key={card.videoId}>
             <Card {...card} />
           </a>
         ))}
       </div>
-      <Link href="/retrieve" className={styles.actionButton}>
+      <motion.div
+        initial={{ scale: 1, opacity: 0 }}
+        animate={animateBackground ? { scale: 50, opacity: 1 } : {}}
+        transition={{ duration: 0.2 }}
+        style={
+          animateBackground
+            ? {
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: theme.colors.primary,
+              }
+            : {}
+        }
+      ></motion.div>
+      <button
+        className={styles.actionButton}
+        onClick={() => {
+          setAnimateBackground(true);
+          setTimeout(() => {
+            router.push("/retrieve");
+          }, 200);
+        }}
+      >
         <span className={styles.actionButton__span}>Try it Now</span>
         <ArrowRight />
-      </Link>
+      </button>
     </main>
   );
 }
