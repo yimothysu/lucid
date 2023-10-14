@@ -13,3 +13,8 @@
 .answerText {
     padding-bottom: 0.5rem;
 }
+
+.answerForm {
+    display: flex;
+    flex-direction: column;
+}

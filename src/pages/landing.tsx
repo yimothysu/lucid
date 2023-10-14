@@ -6,7 +6,6 @@ export default function Landing() {
       <div className="div">
         <div className="div-2">
           <div className="div-3">
-        
             <div className="div-4">
               <div className="div-5">Home</div>
               <div className="div-6">Product</div>
@@ -19,9 +18,7 @@ export default function Landing() {
           </div>
           <div className="div-11">
             <div className="div-12">
-              <div className="column">
-         
-              </div>
+              <div className="column"></div>
               <div className="column-2">
                 <div className="div-13">
                   <div className="div-14">
@@ -49,12 +46,9 @@ export default function Landing() {
                           </div>
                         </div>
                       </div>
-                      <div className="column-4">
-                 
-                      </div>
+                      <div className="column-4"></div>
                     </div>
                   </div>
-          
                 </div>
               </div>
             </div>
@@ -446,35 +440,6 @@ export default function Landing() {
         @media (max-width: 991px) {
           .column-4 {
             width: 100%;
-          }
-        }
-        .img-3 {
-          aspect-ratio: 0.68;
-          object-fit: cover;
-          object-position: center;
-          width: 100%;
-          fill: var(--secondary, #f3cd03);
-          overflow: hidden;
-          margin-top: 271px;
-          flex-grow: 1;
-        }
-        @media (max-width: 991px) {
-          .img-3 {
-            margin-top: 200px;
-          }
-        }
-        .img-4 {
-          aspect-ratio: 1.52;
-          object-fit: cover;
-          object-position: center;
-          width: 100%;
-          overflow: hidden;
-          align-self: center;
-          flex-grow: 1;
-        }
-        @media (max-width: 991px) {
-          .img-4 {
-            max-width: 100%;
           }
         }
       `}</style>

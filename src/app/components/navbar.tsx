@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <div className={styles.navbar}>
       <div className={styles.navbar__logo}>
-        <Image src="/logo-v0.png" alt="logo" width={50} height={50} />
+        <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
         Lucid
       </div>
       <div className={styles.navbar__links}>

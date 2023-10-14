@@ -4,9 +4,13 @@ import theme from "./styles/theme";
 
 export default function Home() {
   return (
-    <main>
-      <div>Landing Page</div>
-      <div>TODO</div>
+    <main className={styles.mainContainer}>
+      <div className={styles.title}>
+        Making Cool <br /> Shit
+      </div>
+      <div className={styles.subtitle}>
+        Revolutionizing education one video at a time
+      </div>
     </main>
   );
 }
