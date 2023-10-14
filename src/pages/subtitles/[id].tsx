@@ -51,7 +51,7 @@ export default function Subtitles () {
         <div>
           <h1>Subtitles: 
           {subtitles.subtitles.map((subtitle, index) => (
-          <span key={index}>{subtitle.text} </span>))} </h1>
+          <span key={index}>{subtitle.text.replace(/\[.*\]/g, "")} </span>))} </h1>
           
         </div>
       ) : (
