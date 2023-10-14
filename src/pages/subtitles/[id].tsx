@@ -2,15 +2,25 @@
 import {useEffect, useState} from "react"
 import { useParams } from "next/navigation";
 
+type subItem = {
+    start: string,
+    dur: string,
+    text: string
+}
+
+type subItems = {
+    subtitles: subItem[]
+}
+
 export default function Subtitles () {
     
     const params = useParams()
     
-    const [subtitles, setSubtitles] = useState(null);
+    const [subtitles, setSubtitles] = useState<subItems>();
 
 
     useEffect(() => {
-        const fetchSubtitles = async (videoID = 'FSmCaprEcQM', lang = 'en') => {
+        const fetchSubtitles = async (videoID = 'hUGzo8v7gHk', lang = 'en') => {
           try {
             const response = await fetch(
               `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
@@ -18,9 +28,9 @@ export default function Subtitles () {
             console.log("Here!")
             const data = await response.json();
             console.log(data);
+
             setSubtitles(data);
-            // setSubtitles(data.subtitles);
-            // setVideoDetails(data.videoDetails);
+    
           } catch (error) {
             console.error('Error fetching subtitles:', error);
           }
@@ -33,9 +43,10 @@ export default function Subtitles () {
         <div>
             {subtitles ? (
         <div>
-          <h1>Subtitles</h1>
-          <p>Subtitle 1: {JSON.stringify(subtitles)}</p>
-          {/* Render other properties from data */}
+          <h1>Subtitles: 
+          {subtitles.subtitles.map((subtitle, index) => (
+          <span key={index}>{subtitle.text} </span>))} </h1>
+          
         </div>
       ) : (
         <p>Loading subtitles...</p>
@@ -43,3 +54,6 @@ export default function Subtitles () {
         </div>
     )
 }
+
+
+
