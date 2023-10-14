@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
   width: 100%;
   font-size: large;
 }
@@ -14,9 +13,9 @@
 }
 
 .navbar__links {
+  padding-right: 1rem;
   display: flex;
   justify-content: space-between;
-  width: 20rem;
 }
 
 .navbar__links a {

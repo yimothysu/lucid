@@ -33,10 +33,12 @@
 .questionInput {
   padding: 0.5rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
 }
 
 .questionSubmit {
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 1rem;
+  padding-top: 0.4rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background-color: #a4907c;
   color: white;
@@ -45,7 +47,7 @@
 }
 
 .questionSubmit:hover {
-  background-color: #b8a797;
+  background-color: #8a745f;
 }
 
 .videoSection {
@@ -74,7 +76,7 @@
 }
 
 .timestamp:hover {
-  background-color: darkorange;
+  background-color: #ffd9ab;
   cursor: pointer;
 }
 
@@ -96,4 +98,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.showQuestions {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #bef5d0;
+  color: #303b33;
+  margin-top: 1rem;
+  margin: 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.showQuestions:hover {
+  background-color: #94e0ad;
 }

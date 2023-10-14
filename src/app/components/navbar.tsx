@@ -4,14 +4,12 @@ import styles from "./style.module.css";
 export default function Navbar() {
   return (
     <div className={styles.navbar}>
-      <div className={styles.navbar__logo}>
+      <a className={styles.navbar__logo} href="/">
         <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
         Lucid
-      </div>
+      </a>
       <div className={styles.navbar__links}>
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <a href="/retrieve">Try Now</a>
       </div>
     </div>
   );

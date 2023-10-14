@@ -11,9 +11,9 @@ const theme = {
     warning: "#fff3cd",
     success: "#d4edda",
     primary: "#98EECC",
-    secondary: "#D0F5BE",
+    secondary: "#bef5d0",
     background: "#A4907C",
-    backgroundHover: "#b8a797",
+    backgroundHover: "#8a745f",
     contrast: "#FBFFDC",
   },
 };

@@ -2,6 +2,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "./video.module.css";
+import FeatherIcon from "feather-icons-react";
 import {
   addVideoQuestion,
   getVideoQuestionAnswer,
@@ -83,7 +84,7 @@ export default function Video() {
   const [player, setPlayer] = useState<any>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [question, setQuestion] = useState<string>("Question");
+  const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("Answer");
 
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
@@ -174,15 +175,18 @@ export default function Video() {
       </div>
       <form className={styles.questionForm} onSubmit={onSubmit}>
         <label htmlFor="question" className={styles.questionLabel}>
-          Question
+          Ask a Question
         </label>
         <textarea
           id="question"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           className={styles.questionInput}
+          placeholder="Question"
         />
-        <input type="submit" value="Submit" className={styles.questionSubmit} />
+        <button type="submit" className={styles.questionSubmit}>
+          <FeatherIcon icon="arrow-right" />
+        </button>
       </form>
       <input
         type="button"
@@ -190,7 +194,7 @@ export default function Video() {
         onClick={() => {
           onGetQA();
         }}
-        style={{ marginTop: "20px" }}
+        className={styles.showQuestions}
       />
       {questionResp &&
         questionResp.length === answerResp.length &&

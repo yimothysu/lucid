@@ -2,38 +2,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;;
+  justify-content: center;
   margin-top: 200px;
- 
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.22) 7.62%,
-    rgba(0, 225, 198, 0.06) 25.5%,
-    #fff 70.92%
-  );
 }
 
-.title {
-  color: var(--secondary, #112d57);
-  text-align: center;
-  font-family: Circular Std, -apple-system, Roboto, Helvetica,
-    sans-serif;
-  font-size: 62px;
-  font-weight: 900;
-  line-height: 108.33%;
-  letter-spacing: 0.2px;
- 
+.cardTitle {
+  font-size: 1rem;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.subtitle {
-  color: var(--second-text, #5c5c5c);
-  text-align: center;
-  font-family: Circular Std, -apple-system, Roboto, Helvetica,
-    sans-serif;
-  font-size: 24px;
-  font-weight: 450;
-  line-height: 158.33%;
-  letter-spacing: 0.2px;
-  align-self: stretch;
-  margin-top: 37px;
+.cardContainer {
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.cardContainer:hover {
+  background-color: #e8e8e8;
+}
+
+.cardSampleQuestion {
+  font-style: italic;
+  text-overflow: ellipsis;
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.cardSampleAnswer {
+  font-style: italic;
+  text-overflow: ellipsis;
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
 }
