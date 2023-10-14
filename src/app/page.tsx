@@ -5,7 +5,8 @@ import theme from "./styles/theme";
 export default function Home() {
   return (
     <main>
-      
+      <div>Landing Page</div>
+      <div>TODO</div>
     </main>
   );
 }
