@@ -3,7 +3,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 200px;
 }
 
 .cardTitle {
@@ -38,4 +37,29 @@
   max-width: 240px;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin-bottom: 3rem;
+}
+
+.actionButton {
+  font-size: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: #98eecc;
+  display: flex;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.actionButton:hover {
+  background-color: #6fd19e;
+}
+
+.actionButton__span {
+  margin-right: 0.5rem;
 }

@@ -4,6 +4,7 @@ import theme from "@/app/styles/theme";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
 import "@/app/globals.css";
+import Navbar from "@/app/components/navbar";
 
 const { colors } = theme;
 
@@ -28,28 +29,36 @@ const YouTubeLinkInput = () => {
   };
 
   return (
-    <div className="container">
-      <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
-      <div className="title">Paste YouTube Link Here</div>
-      <form className="inputs" onSubmit={handleSubmit}>
-        <input
-          className="link-input"
-          type="text"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-          placeholder="https://youtube.com/..."
-        />
-        <button className="submitButton" type="submit">
-          <FeatherIcon icon="arrow-right" />
-        </button>
-      </form>
+    <div className="wrapper">
+      <Navbar />
+      <div className="container">
+        <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
+        <div className="title">Paste YouTube Link Here</div>
+        <form className="inputs" onSubmit={handleSubmit}>
+          <input
+            className="link-input"
+            type="text"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            placeholder="https://youtube.com/..."
+          />
+          <button className="submitButton" type="submit">
+            <FeatherIcon icon="arrow-right" />
+          </button>
+        </form>
+      </div>
       <style jsx>{`
+        .wrapper {
+          background-color: ${colors.primary};
+          min-height: 100vh;
+        }
+
         .container {
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          min-height: 100vh;
+          height: 80vh;
           background-color: ${colors.primary};
         }
 

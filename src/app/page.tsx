@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import FeatherIcon from "feather-icons-react";
 import theme from "./styles/theme";
 
 function getThumbnailUrl(videoId: string) {
@@ -46,15 +47,88 @@ export default function Home() {
         "What did the speaker do after 7 years of not being in Morocco?",
       sampleAnswer: "They went back to Morocco",
     },
+    {
+      title: "Never Gonna Give You Up",
+      videoId: "dQw4w9WgXcQ",
+      sampleQuestion: "What is the first word in the song?",
+      sampleAnswer: "We're",
+    },
+    {
+      title: "I went back to Morocco after 7 years",
+      videoId: "Y9QWyDMa0rk",
+      sampleQuestion:
+        "What did the speaker do after 7 years of not being in Morocco?",
+      sampleAnswer: "They went back to Morocco",
+    },
+    {
+      title: "Never Gonna Give You Up",
+      videoId: "dQw4w9WgXcQ",
+      sampleQuestion: "What is the first word in the song?",
+      sampleAnswer: "We're",
+    },
+    {
+      title: "I went back to Morocco after 7 years",
+      videoId: "Y9QWyDMa0rk",
+      sampleQuestion:
+        "What did the speaker do after 7 years of not being in Morocco?",
+      sampleAnswer: "They went back to Morocco",
+    },
+    {
+      title: "Never Gonna Give You Up",
+      videoId: "dQw4w9WgXcQ",
+      sampleQuestion: "What is the first word in the song?",
+      sampleAnswer: "We're",
+    },
+    {
+      title: "I went back to Morocco after 7 years",
+      videoId: "Y9QWyDMa0rk",
+      sampleQuestion:
+        "What did the speaker do after 7 years of not being in Morocco?",
+      sampleAnswer: "They went back to Morocco",
+    },
+    {
+      title: "Never Gonna Give You Up",
+      videoId: "dQw4w9WgXcQ",
+      sampleQuestion: "What is the first word in the song?",
+      sampleAnswer: "We're",
+    },
+    {
+      title: "I went back to Morocco after 7 years",
+      videoId: "Y9QWyDMa0rk",
+      sampleQuestion:
+        "What did the speaker do after 7 years of not being in Morocco?",
+      sampleAnswer: "They went back to Morocco",
+    },
+    {
+      title: "Never Gonna Give You Up",
+      videoId: "dQw4w9WgXcQ",
+      sampleQuestion: "What is the first word in the song?",
+      sampleAnswer: "We're",
+    },
+    {
+      title: "I went back to Morocco after 7 years",
+      videoId: "Y9QWyDMa0rk",
+      sampleQuestion:
+        "What did the speaker do after 7 years of not being in Morocco?",
+      sampleAnswer: "They went back to Morocco",
+    },
   ];
 
   return (
     <main className={styles.mainContainer}>
-      {cards.map((card) => (
-        <a href={`/videos/${card.videoId}`}>
-          <Card {...card} />
-        </a>
-      ))}
+      <Image src="/logo-v0.png" alt="logo" width={200} height={200} />
+      <h1>Education reimagined, one lecture at a time.</h1>
+      <div className={styles.cardsGrid}>
+        {cards.map((card) => (
+          <a href={`/videos/${card.videoId}`}>
+            <Card {...card} />
+          </a>
+        ))}
+      </div>
+      <a href="/retrieve" className={styles.actionButton}>
+        <span className={styles.actionButton__span}>Try it Now</span>
+        <FeatherIcon icon="arrow-right" />
+      </a>
     </main>
   );
 }
