@@ -1,0 +1,28 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  width: 10rem;
+}
+
+.navbar__links {
+  display: flex;
+  justify-content: space-between;
+  width: 20rem;
+}
+
+.navbar__links a {
+  text-decoration: none;
+  color: black;
+}
+
+.navbar__links a:hover {
+  /* Lighten */
+  filter: brightness(1.2);
+}
