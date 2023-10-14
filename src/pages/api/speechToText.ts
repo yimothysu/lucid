@@ -2,14 +2,9 @@
 import { OpenAI } from 'openai';
 import { exec } from 'child_process';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import ffmpeg from 'fluent-ffmpeg';
 import { createReadStream, promises as fsPromises } from 'fs';
 import { join } from 'path';
-import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import fs from 'fs';
-
-
-ffmpeg.setFfmpegPath(ffmpegInstaller.path);
  
 // Promisify the exec function from child_process
 const util = require('util');
