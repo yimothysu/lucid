@@ -1,7 +1,8 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import FeatherIcon from "feather-icons-react";
+import { ArrowRight } from "react-feather";
 import theme from "./styles/theme";
+import Link from "next/link";
 
 function getThumbnailUrl(videoId: string) {
   return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
@@ -19,6 +20,7 @@ type CardProps = Card;
 function Card(props: CardProps) {
   return (
     <div className={styles.cardContainer}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={getThumbnailUrl(props.videoId)}
         alt={`Video for ${props.title}`}
@@ -120,15 +122,18 @@ export default function Home() {
       <h1>Education reimagined, one lecture at a time.</h1>
       <div className={styles.cardsGrid}>
         {cards.map((card) => (
-          <a href={`/videos/${card.videoId}`}>
+          <a
+            key={`${card.videoId} ${card.sampleQuestion}`}
+            href={`/videos/${card.videoId}`}
+          >
             <Card {...card} />
           </a>
         ))}
       </div>
-      <a href="/retrieve" className={styles.actionButton}>
+      <Link href="/retrieve" className={styles.actionButton}>
         <span className={styles.actionButton__span}>Try it Now</span>
-        <FeatherIcon icon="arrow-right" />
-      </a>
+        <ArrowRight />
+      </Link>
     </main>
   );
 }

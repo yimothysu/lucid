@@ -2,7 +2,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "./video.module.css";
-import FeatherIcon from "feather-icons-react";
+import feather from "feather-icons";
 import {
   addVideoQuestion,
   getVideoQuestionAnswer,
@@ -66,6 +66,7 @@ function ProgressBar(props: ProgressBarProps) {
       ></div>
       {timestamps.map((timestamp) => (
         <div
+          key={timestamp.timestamp}
           className={styles.timestamp}
           style={{
             left: (timestamp.timestamp / props.duration) * 100 + "%",
@@ -185,7 +186,10 @@ export default function Video() {
           placeholder="Question"
         />
         <button type="submit" className={styles.questionSubmit}>
-          <FeatherIcon icon="arrow-right" />
+          {feather.icons["arrow-right"].toSvg({
+            width: 20,
+            height: 20,
+          })}
         </button>
       </form>
       <input

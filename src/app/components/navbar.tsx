@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./style.module.css";
-
+import Link from "next/link";
 export default function Navbar() {
   return (
     <div className={styles.navbar}>
@@ -9,7 +9,7 @@ export default function Navbar() {
         Lucid
       </a>
       <div className={styles.navbar__links}>
-        <a href="/retrieve">Try Now</a>
+        <Link href="/retrieve">Try Now</Link>
       </div>
     </div>
   );

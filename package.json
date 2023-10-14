@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "feather-icons-react": "^0.6.2",
+    "@types/feather-icons": "^4.29.2",
+    "feather-icons": "^4.29.1",
     "firebase": "^10.5.0",
     "next": "13.5.4",
     "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-feather": "^2.0.10",
     "react-player": "^2.13.0",
     "react-youtube": "^10.1.0",
     "youtube-caption-extractor": "^1.4.3"

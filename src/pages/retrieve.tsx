@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import theme from "@/app/styles/theme";
-import FeatherIcon from "feather-icons-react";
+import { ArrowRight } from "react-feather";
 import Image from "next/image";
 import "@/app/globals.css";
 import Navbar from "@/app/components/navbar";
@@ -43,7 +43,7 @@ const YouTubeLinkInput = () => {
             placeholder="https://youtube.com/..."
           />
           <button className="submitButton" type="submit">
-            <FeatherIcon icon="arrow-right" />
+            <ArrowRight />
           </button>
         </form>
       </div>
