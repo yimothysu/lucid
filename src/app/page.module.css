@@ -54,6 +54,8 @@
   display: flex;
   align-items: center;
   margin-bottom: 3rem;
+  border: none;
+  cursor: pointer;
 }
 
 .actionButton:hover {

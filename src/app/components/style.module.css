@@ -12,6 +12,10 @@
   width: 10rem;
 }
 
+.navbar__logo:hover {
+  font-weight: bold;
+}
+
 .navbar__links {
   padding-right: 1rem;
   display: flex;
@@ -25,5 +29,6 @@
 
 .navbar__links a:hover {
   /* Lighten */
+  font-weight: bold;
   filter: brightness(1.2);
 }
