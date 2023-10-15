@@ -77,7 +77,7 @@ export default function Home() {
       } else {
         newCards = randomVideos.map((video) => ({
           videoId: video.id,
-          title: "We ball",
+          title: video.title,
           sampleQuestion: video.questionAnswerPairs[0].question,
           sampleAnswer: video.questionAnswerPairs[0].answer,
         })) as Card[];
