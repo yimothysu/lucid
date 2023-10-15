@@ -103,6 +103,7 @@
 }
 
 .currentQuestionSection {
+  height: 100%;
   width: 100%;
   padding: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -133,6 +134,7 @@
 }
 
 .topPart {
+  height: 100%;
   display: flex;
   justify-content: space-between;
   /* align-items: center; */
@@ -157,4 +159,17 @@
 .info-box {
   width: 100%;
   height: 200px;
+}
+
+.threadContainer {
+  height: 100%;
+}
+
+.questionsSection {
+  overflow-y: scroll;
+  height: 50vh;
+}
+
+.questionAnswerPair {
+  margin-bottom: 1rem;
 }

@@ -13,6 +13,31 @@ import { LiveAudioVisualizer } from "react-audio-visualize";
 
 const PROGRESS_INTERVAL_MS = 500;
 
+function QuestionAnswerPair(props: {
+  question: string;
+  answer?: string;
+  submitting: boolean;
+}) {
+  return (
+    <div className={styles.questionAnswerPair}>
+      <div className={styles.currentQuestion}>Student</div>
+      <div className={styles.currentQuestionText}>{props.question}</div>
+      <div className={styles.currentAnswer}>AI</div>
+      <div className={styles.currentAnswerText}>
+        {props.answer ? (
+          props.answer
+        ) : props.submitting ? (
+          <i>Generating...</i>
+        ) : (
+          <i>
+            An error occurred while generating an answer to these questions.
+          </i>
+        )}
+      </div>
+    </div>
+  );
+}
+
 const augmentPrompt = (context: string, title: string, question: string) => {
   return `
   Please answer the question.
@@ -299,7 +324,7 @@ export default function Video() {
     if (!videoId || Array.isArray(videoId)) {
       return;
     }
-  
+
     let localCurrentAnswer = "";
     setSubmitting(true);
     setCurrentQuestions((prevQuestions) => [...prevQuestions, question]);
@@ -318,7 +343,12 @@ export default function Video() {
         }).then(() => {
           setTimeStamps([
             ...timeStamps,
-            { timestamp: elapsedTime, question, answer: localCurrentAnswer, userTime: Date.now()},
+            {
+              timestamp: elapsedTime,
+              question,
+              answer: localCurrentAnswer,
+              userTime: Date.now(),
+            },
           ]);
         });
         setSubmitting(false);
@@ -334,7 +364,6 @@ export default function Video() {
       }
     };
   };
-  
 
   const onReady = (player: any) => {
     setDuration(player.getDuration());
@@ -349,25 +378,23 @@ export default function Video() {
     const matchingTimestamps = timeStamps.filter(
       (timestamp) => timestamp.timestamp === clickedTimestamp.timestamp
     );
-  
+
     // Sort the timestamps
     matchingTimestamps.sort((a, b) => {
       const timeA = a.userTime !== undefined ? a.userTime : a.timestamp;
       const timeB = b.userTime !== undefined ? b.userTime : b.timestamp;
-  
+
       return timeA - timeB;
     });
-  
+
     const questions = matchingTimestamps.map((timestamp) => timestamp.question);
     const answers = matchingTimestamps.map((timestamp) => timestamp.answer);
-  
+
     setCurrentQuestions(questions);
     setCurrentAnswers(answers);
     setElapsedTime(clickedTimestamp.timestamp);
     setProgress(clickedTimestamp.timestamp);
   };
-  
-  
 
   const setProgress = (time: number) => {
     player.seekTo(time);
@@ -446,19 +473,15 @@ export default function Video() {
               <div className={styles.threadTitle}>
                 Thread at {elapsedTime} seconds
               </div>
-              <div className={styles.currentQuestion}>Students</div>
-              <div className={styles.currentQuestionText}>
-                {currentQuestions.join(", ")}
-              </div>
-              <div className={styles.currentAnswer}>AI</div>
-              <div className={styles.currentAnswerText}>
-                {currentAnswers.length > 0 ? (
-                  currentAnswers.join(", ")
-                ) : submitting ? (
-                  <i>Generating...</i>
-                ) : (
-                  <i>An error occurred while generating an answer to these questions.</i>
-                )}
+              <div className={styles.questionsSection}>
+                {currentQuestions.map((_, i) => (
+                  <QuestionAnswerPair
+                    key={i}
+                    question={currentQuestions[i]}
+                    answer={currentAnswers[i]}
+                    submitting={submitting}
+                  />
+                ))}
               </div>
             </div>
           ) : (
@@ -467,7 +490,6 @@ export default function Video() {
             </div>
           )}
         </div>
-
       </div>
       <div className={styles.questionForm} onSubmit={onSubmit}>
         <label htmlFor="question" className={styles.questionLabel}>
