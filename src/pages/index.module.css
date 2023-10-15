@@ -52,6 +52,7 @@
   grid-template-columns: 1fr 1fr 1fr 1fr;
   margin-bottom: 3rem;
   background-color: "#f9f9fd";
+  min-height: 80vh;
 }
 
 @media (max-width: 768px) {
