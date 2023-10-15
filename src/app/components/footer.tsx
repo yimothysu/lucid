@@ -1,21 +1,21 @@
-import { CircleFlag } from 'react-circle-flags'
+import { CircleFlag } from "react-circle-flags";
 export default function Navbar() {
   const countries = [
     {
-        countryCode: "us"
+      countryCode: "us",
     },
     {
-        countryCode: "es"
+      countryCode: "es",
     },
     {
-        countryCode: "fr"
+      countryCode: "fr",
     },
     {
-        countryCode: "de"
+      countryCode: "de",
     },
     {
-        countryCode: "in"
-    }
+      countryCode: "in",
+    },
   ];
 
   return (
@@ -26,14 +26,18 @@ export default function Navbar() {
         display: "flex",
         alignContent: "center",
         justifyContent: "center",
-        gap: "1em"
+        gap: "1em",
       }}
     >
-     {
-        countries.map((item, index) => {
-            return <CircleFlag countryCode={`${item.countryCode}`} height='50px' />
-        })
-     }
+      {countries.map((item, index) => {
+        return (
+          <CircleFlag
+            key={`${item.countryCode}`}
+            countryCode={`${item.countryCode}`}
+            height="50px"
+          />
+        );
+      })}
     </div>
   );
 }

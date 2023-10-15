@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "./video.module.css";
-import { ArrowRight, Mic, MicOff} from "react-feather";
+import { ArrowRight, Mic, MicOff } from "react-feather";
 import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
 import { useRouter } from "next/router";
@@ -268,7 +268,7 @@ export default function Video() {
     }
 
     setSubmitting(true);
-
+    setCurrentQuestion(question);
     const es = await callGenerateText(question);
     es.onmessage = async (event) => {
       if (event.data === "JimSu123!") {
@@ -292,9 +292,9 @@ export default function Video() {
         setQuestion("");
 
         es.close();
+      } else {
+        setCurrentAnswer((prevText) => `${prevText}${event.data}`);
       }
-      setCurrentQuestion(question);
-      setCurrentAnswer((prevText) => prevText + event.data);
     };
   };
 
@@ -357,7 +357,7 @@ export default function Video() {
 
   return (
     <main className={styles.main}>
-      <Navbar hideTryNow = {true}/>
+      <Navbar hideTryNow={true} />
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
           <ReactPlayer
@@ -420,14 +420,17 @@ export default function Video() {
           className={styles.questionInput}
           placeholder="Question"
         />
-        
+
         <div className={styles.buttonContainer}>
-        <button className={styles.questionSubmit} onClick={onSubmit}>
-          {submitting ? <Spinner /> : <ArrowRight />}
-        </button>
-        <button className={styles.questionMic} onClick={recording ? stopRecording : startRecording}>
-          {recording ? <Mic /> : <MicOff />}
-        </button>
+          <button className={styles.questionSubmit} onClick={onSubmit}>
+            {submitting ? <Spinner /> : <ArrowRight />}
+          </button>
+          <button
+            className={styles.questionMic}
+            onClick={recording ? stopRecording : startRecording}
+          >
+            {recording ? <Mic /> : <MicOff />}
+          </button>
         </div>
         <div
           style={{
@@ -435,8 +438,7 @@ export default function Video() {
           }}
         ></div>
       </div>
-      <div>
-      </div>
+      <div></div>
     </main>
   );
 }

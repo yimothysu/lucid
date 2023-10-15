@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { streamGPT3 } from "../../utils/call-openai";
 
 async function writeToStream(res: NextApiResponse, data: string) {
-  res.write(`data: ${JSON.stringify(data)}\n\n`);
+  res.write(`data: ${data}\n\n`);
   console.log("Streaming response written to response:", data);
   res.flushHeaders();
 }
@@ -28,8 +28,9 @@ export default async function handler(
       for await (const chunk of streamGPT3(prompt)) {
         promises.push(writeToStream(res, chunk || ""));
       }
+      promises.push(writeToStream(res, "JimSu123!"));
       await Promise.all(promises);
-      await writeToStream(res, "JimSu123!");
+
       res.end();
     } catch (error) {
       console.error("Streaming error:", error);
