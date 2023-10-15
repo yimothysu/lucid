@@ -421,12 +421,15 @@ export default function Video() {
         </div>
         <div className={styles.currentQuestionSection}>
           {currentQuestion ? (
-            <>
-              <div className={styles.currentQuestion}>Current Question</div>
+            <div className={styles.threadContainer}>
+              <div className={styles.threadTitle}>
+                Thread at {elapsedTime} seconds
+              </div>
+              <div className={styles.currentQuestion}>Student</div>
               <div className={styles.currentQuestionText}>
                 {currentQuestion}
               </div>
-              <div className={styles.currentAnswer}>Current Answer</div>
+              <div className={styles.currentAnswer}>AI</div>
               <div className={styles.currentAnswerText}>
                 {currentAnswer ? (
                   currentAnswer
@@ -439,9 +442,11 @@ export default function Video() {
                   </i>
                 )}
               </div>
-            </>
+            </div>
           ) : (
-            <div>Click on the progress bar to see questions and answers</div>
+            <div className={styles.starterText}>
+              Click on the progress bar to see questions and answers
+            </div>
           )}
         </div>
       </div>
