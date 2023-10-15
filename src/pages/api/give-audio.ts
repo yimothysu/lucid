@@ -4,8 +4,8 @@ const voice = require("elevenlabs-node");
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
-    const apiKey = "b765ae621b7da38b329758e6f42305eb";
-    const voiceID = "ThT5KcBeYPX3keUQqHPh";  
+    const apiKey = process.env.ELEVEN_API_KEY;
+    const voiceID = "ThT5KcBeYPX3keUQqHPh";
 
     try {
       const ttsStream = await voice.textToSpeechStream(apiKey, voiceID, req.query.text as string);
