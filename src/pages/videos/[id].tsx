@@ -18,12 +18,17 @@ import Footer from "@/app/components/footer";
 
 export async function getStaticProps(context: { locale: any }) {
   // extract the locale identifier from the URL
-  const { locale } = context;
-
+  let data = {};
+  try {
+    const { locale } = context;
+    // pass the translation props to the page component
+    data = { ...(await serverSideTranslations(locale)) };
+  } catch (e) {
+    console.log(e);
+  }
   return {
     props: {
-      // pass the translation props to the page component
-      ...(await serverSideTranslations(locale)),
+      ...data,
     },
   };
 }
