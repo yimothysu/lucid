@@ -69,6 +69,7 @@ interface Timestamp {
   timestamp: number;
   question: string;
   answer: string;
+  userTime: number;
 }
 
 type subItem = {
@@ -174,8 +175,8 @@ export default function Video() {
   const [question, setQuestion] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const [currentQuestion, setCurrentQuestion] = useState<string>("");
-  const [currentAnswer, setCurrentAnswer] = useState<string>("");
+  const [currentQuestions, setCurrentQuestions] = useState<string[]>([]);
+  const [currentAnswers, setCurrentAnswers] = useState<string[]>([]);
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
@@ -298,12 +299,11 @@ export default function Video() {
     if (!videoId || Array.isArray(videoId)) {
       return;
     }
-
-    // Use local variable to prevent race condition
+  
     let localCurrentAnswer = "";
     setSubmitting(true);
-    setCurrentQuestion(question);
-    setCurrentAnswer("");
+    setCurrentQuestions((prevQuestions) => [...prevQuestions, question]);
+    setCurrentAnswers((prevAnswers) => [...prevAnswers, ""]);
     const context = filterSubtitles(subtitles, intervals, elapsedTime);
     const title = await fetchTitle(videoId);
     const es = await callGenerateText(augmentPrompt(context, title, question));
@@ -318,19 +318,23 @@ export default function Video() {
         }).then(() => {
           setTimeStamps([
             ...timeStamps,
-            { timestamp: elapsedTime, question, answer: localCurrentAnswer },
+            { timestamp: elapsedTime, question, answer: localCurrentAnswer, userTime: Date.now()},
           ]);
         });
         setSubmitting(false);
         setQuestion("");
-
         es.close();
       } else {
         localCurrentAnswer += event.data;
-        setCurrentAnswer(localCurrentAnswer);
+        setCurrentAnswers((prevAnswers) => {
+          const newAnswers = [...prevAnswers];
+          newAnswers[newAnswers.length - 1] = localCurrentAnswer;
+          return newAnswers;
+        });
       }
     };
   };
+  
 
   const onReady = (player: any) => {
     setDuration(player.getDuration());
@@ -341,12 +345,29 @@ export default function Video() {
     setElapsedTime(Math.floor(progress.playedSeconds));
   };
 
-  const onTimestampClick = (timestamp: Timestamp) => {
-    setCurrentQuestion(timestamp.question);
-    setCurrentAnswer(timestamp.answer);
-    setElapsedTime(timestamp.timestamp);
-    setProgress(timestamp.timestamp);
+  const onTimestampClick = (clickedTimestamp: Timestamp) => {
+    const matchingTimestamps = timeStamps.filter(
+      (timestamp) => timestamp.timestamp === clickedTimestamp.timestamp
+    );
+  
+    // Sort the timestamps
+    matchingTimestamps.sort((a, b) => {
+      const timeA = a.userTime !== undefined ? a.userTime : a.timestamp;
+      const timeB = b.userTime !== undefined ? b.userTime : b.timestamp;
+  
+      return timeA - timeB;
+    });
+  
+    const questions = matchingTimestamps.map((timestamp) => timestamp.question);
+    const answers = matchingTimestamps.map((timestamp) => timestamp.answer);
+  
+    setCurrentQuestions(questions);
+    setCurrentAnswers(answers);
+    setElapsedTime(clickedTimestamp.timestamp);
+    setProgress(clickedTimestamp.timestamp);
   };
+  
+  
 
   const setProgress = (time: number) => {
     player.seekTo(time);
@@ -420,30 +441,26 @@ export default function Video() {
           </div>
         </div>
         <div className={styles.currentQuestionSection}>
-          {currentQuestion ? (
+          {currentQuestions.length > 0 ? (
             <>
-              <div className={styles.currentQuestion}>Current Question</div>
+              <div className={styles.currentQuestion}>Current Questions</div>
               <div className={styles.currentQuestionText}>
-                {currentQuestion}
+                {currentQuestions.join(", ")}
               </div>
-              <div className={styles.currentAnswer}>Current Answer</div>
+              <div className={styles.currentAnswer}>Current Answers</div>
               <div className={styles.currentAnswerText}>
-                {currentAnswer ? (
-                  currentAnswer
+                {currentAnswers.length > 0 ? (
+                  currentAnswers.join(", ")
                 ) : submitting ? (
                   <i>Generating...</i>
                 ) : (
-                  <i>
-                    An error occurred while generating an answer to this
-                    question.
-                  </i>
+                  <i>An error occurred while generating an answer to these questions.</i>
                 )}
               </div>
             </>
-          ) : (
-            <div>Click on the progress bar to see questions and answers</div>
-          )}
+          ) : null}
         </div>
+
       </div>
       <div className={styles.questionForm} onSubmit={onSubmit}>
         <label htmlFor="question" className={styles.questionLabel}>
