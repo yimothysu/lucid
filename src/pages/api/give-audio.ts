@@ -16,13 +16,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       ttsStream.on('end', () => {
-        res.setHeader('Content-Type', 'audio/wav');
+        res.setHeader('Content-Type', 'audio/mp3');
         res.status(200).send(chunksAnswer);
       });
     } catch (error) {
       res.status(500).json({ error: 'An error occurred' });
     }
   } else {
-    res.status(404).send('Not Found');
+    res.status(404).send('Balls');
   }
 };
