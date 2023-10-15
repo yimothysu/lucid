@@ -161,13 +161,17 @@
   height: 200px;
 }
 
-.threadContainer {
+.currentQuestionSection {
+  height: 60vh;
+}
+
+.currentThread {
   height: 100%;
 }
 
 .questionsSection {
   overflow-y: scroll;
-  height: 50vh;
+  height: 100%;
 }
 
 .questionAnswerPair {
