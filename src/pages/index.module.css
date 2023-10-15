@@ -18,7 +18,6 @@
 
 .cardContainer {
   padding: 1rem;
-  border-radius: 0.5rem;
   background-color: "#f9f9fd";
 }
 
@@ -64,7 +63,6 @@
 .actionButton {
   font-size: 1.5rem;
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
   background-color: #bef5d0;
   display: flex;
   align-items: center;

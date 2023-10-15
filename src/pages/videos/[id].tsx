@@ -274,7 +274,7 @@ export default function Video() {
             audio.onerror = function (err) {
               console.error("Error playing audio:", err);
             };
-            audio.play();
+            //audio.play();
             try {
               const reader = new FileReader();
               reader.readAsDataURL(audioBlob);

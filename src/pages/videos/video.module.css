@@ -105,15 +105,15 @@
 .currentQuestionSection {
   height: 100%;
   width: 100%;
-  padding: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background-color: #f9f9fd;
 }
 
 .threadTitle {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   font-weight: bold;
   text-decoration: underline;
-  padding-bottom: 1rem;
 }
 
 .starterText {
@@ -165,13 +165,14 @@
   height: 60vh;
 }
 
-.currentThread {
+.threadContainer {
   height: 100%;
 }
 
 .questionsSection {
   overflow-y: scroll;
-  height: 100%;
+  height: 90%;
+  padding: 1rem;
 }
 
 .questionAnswerPair {
