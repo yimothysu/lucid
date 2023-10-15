@@ -51,18 +51,24 @@ type subItems = {
     subtitles: subItem[]
 }
 
-function whatToRender(intervalArray : any[], curTimeStamp : any)
-{
-    const intervalIndexers = [];
-    for(let i = 0; i < intervalArray.length; i++)
-    {
-        if(curTimeStamp >= intervalArray[i].start && curTimeStamp <= intervalArray[i].end)
-        {
-            intervalIndexers.push(i);
+function whatToRender(intervalArray : any[], curTimeStamp: any) {
+    let startIndex = -1;
+    let endIndex = -1;
+  
+    for (let i = 0; i < intervalArray.length; i++) {
+      if (
+        curTimeStamp >= intervalArray[i].start - 30 &&
+        curTimeStamp <= intervalArray[i].end
+      ) {
+        if (startIndex === -1) {
+          startIndex = i;
         }
+        endIndex = i;
+      }
     }
-    return intervalIndexers;
-}
+  
+    return [startIndex, endIndex];
+  }
 
 function ProgressBar(props: ProgressBarProps) {
   return (
@@ -193,10 +199,10 @@ export default function Video() {
   const intervals: Interval[] = [];
   if (subtitles) {
     if (Array.isArray(subtitles.subtitles)) {
-      const intervalSize = 6; // Number of subtitles per interval
+      const intervalSize = 15; // Number of subtitles per interval
   
       for (let i = 0; i <= subtitles.subtitles.length - intervalSize; i++) {
-        const start = parseFloat(subtitles.subtitles[i].start);
+        const start = i === 0 ? 0 : parseFloat(subtitles.subtitles[i].start);
         const end = parseFloat(subtitles.subtitles[i + intervalSize - 1].start);
         const interval = { start, end };
         intervals.push(interval);
