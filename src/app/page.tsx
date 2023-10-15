@@ -4,10 +4,10 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { ArrowRight } from "react-feather";
 import theme from "./styles/theme";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getRandomVideos } from "./firebase/firestore";
 
 function getThumbnailUrl(videoId: string) {
   return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
@@ -28,7 +28,7 @@ function Card(props: CardProps & { id: number }) {
       // Fade in
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: props.id }}
+      transition={{ duration: props.id * 0.2 }}
     >
       <div className={styles.cardContainer}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -53,86 +53,39 @@ export default function Home() {
 
   const router = useRouter();
 
-  const cards: Card[] = [
-    {
-      title: "Never Gonna Give You Up",
-      videoId: "dQw4w9WgXcQ",
-      sampleQuestion: "What is the first word in the song?",
-      sampleAnswer: "We're",
-    },
-    {
-      title: "I went back to Morocco after 7 years",
-      videoId: "Y9QWyDMa0rk",
-      sampleQuestion:
-        "What did the speaker do after 7 years of not being in Morocco?",
-      sampleAnswer: "They went back to Morocco",
-    },
-    {
-      title: "Never Gonna Give You Up",
-      videoId: "dQw4w9WgXcQ",
-      sampleQuestion: "What is the first word in the song?",
-      sampleAnswer: "We're",
-    },
-    {
-      title: "I went back to Morocco after 7 years",
-      videoId: "Y9QWyDMa0rk",
-      sampleQuestion:
-        "What did the speaker do after 7 years of not being in Morocco?",
-      sampleAnswer: "They went back to Morocco",
-    },
-    {
-      title: "Never Gonna Give You Up",
-      videoId: "dQw4w9WgXcQ",
-      sampleQuestion: "What is the first word in the song?",
-      sampleAnswer: "We're",
-    },
-    {
-      title: "I went back to Morocco after 7 years",
-      videoId: "Y9QWyDMa0rk",
-      sampleQuestion:
-        "What did the speaker do after 7 years of not being in Morocco?",
-      sampleAnswer: "They went back to Morocco",
-    },
-    {
-      title: "Never Gonna Give You Up",
-      videoId: "dQw4w9WgXcQ",
-      sampleQuestion: "What is the first word in the song?",
-      sampleAnswer: "We're",
-    },
-    {
-      title: "I went back to Morocco after 7 years",
-      videoId: "Y9QWyDMa0rk",
-      sampleQuestion:
-        "What did the speaker do after 7 years of not being in Morocco?",
-      sampleAnswer: "They went back to Morocco",
-    },
-    {
-      title: "Never Gonna Give You Up",
-      videoId: "dQw4w9WgXcQ",
-      sampleQuestion: "What is the first word in the song?",
-      sampleAnswer: "We're",
-    },
-    {
-      title: "I went back to Morocco after 7 years",
-      videoId: "Y9QWyDMa0rk",
-      sampleQuestion:
-        "What did the speaker do after 7 years of not being in Morocco?",
-      sampleAnswer: "They went back to Morocco",
-    },
-    {
-      title: "Never Gonna Give You Up",
-      videoId: "dQw4w9WgXcQ",
-      sampleQuestion: "What is the first word in the song?",
-      sampleAnswer: "We're",
-    },
-    {
-      title: "I went back to Morocco after 7 years",
-      videoId: "Y9QWyDMa0rk",
-      sampleQuestion:
-        "What did the speaker do after 7 years of not being in Morocco?",
-      sampleAnswer: "They went back to Morocco",
-    },
-  ];
+  const [cards, setCards] = useState<Card[]>([]);
+
+  useEffect(() => {
+    getRandomVideos().then((randomVideos) => {
+      let newCards: Card[] = [];
+      if (randomVideos.length < 12) {
+        // If we don't have enough videos, try to parse it using repeat videos instead and using different questions
+        while (newCards.length < 12) {
+          let i = Math.floor(Math.random() * randomVideos.length);
+          let randomIndex = Math.floor(
+            Math.random() * randomVideos[i].questionAnswerPairs.length
+          );
+          newCards.push({
+            videoId: randomVideos[i].id,
+            title: "We ball",
+            sampleQuestion:
+              randomVideos[i].questionAnswerPairs[randomIndex].question,
+            sampleAnswer:
+              randomVideos[i].questionAnswerPairs[randomIndex].answer,
+          });
+        }
+      } else {
+        newCards = randomVideos.map((video) => ({
+          videoId: video.id,
+          title: "We ball",
+          sampleQuestion: video.questionAnswerPairs[0].question,
+          sampleAnswer: video.questionAnswerPairs[0].answer,
+        })) as Card[];
+      }
+
+      setCards(newCards);
+    });
+  }, []);
 
   return (
     <main className={styles.mainContainer}>

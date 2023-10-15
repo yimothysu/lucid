@@ -6,8 +6,16 @@ import {
   setDoc,
   collection,
   getDocs,
+  orderBy,
+  limit,
+  query,
 } from "firebase/firestore";
-import { addVideoType, QuestionAnswerPair, QuestionAnswerPairs } from "./types";
+import {
+  addVideoType,
+  GetRandomVideo,
+  QuestionAnswerPair,
+  QuestionAnswerPairs,
+} from "./types";
 
 export const db = getFirestore(app);
 
@@ -22,6 +30,26 @@ export async function checkIfExists(collection: string, id: string) {
   } else {
     return false;
   }
+}
+
+// Query firebase randomly to get 12 videos. If there are less than 12 videos, return all videos.
+export async function getRandomVideos() {
+  const videosRef = collection(db, "videos");
+  const q = query(videosRef, limit(12));
+  const videosSnapshot = await getDocs(q);
+
+  const videos: GetRandomVideo[] = videosSnapshot.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...(doc.data() as QuestionAnswerPairs),
+    };
+  });
+
+  const randomVideos = videos
+    .sort(() => Math.random() - Math.random())
+    .slice(0, 12);
+
+  return randomVideos;
 }
 
 export async function getVideoTimeStamps(videoId: string) {

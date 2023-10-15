@@ -44,7 +44,15 @@
   grid-template-rows: 1fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   margin-bottom: 3rem;
+
+  
 }
+
+@media (max-width: 768px) {
+    .cardsGrid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
 
 .actionButton {
   font-size: 1.5rem;

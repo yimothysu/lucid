@@ -14,3 +14,7 @@ export type QuestionAnswerPair = {
 export type QuestionAnswerPairs = {
   questionAnswerPairs: QuestionAnswerPair[];
 };
+
+export type GetRandomVideo = QuestionAnswerPairs & {
+  id: string;
+};
