@@ -59,10 +59,18 @@ function QuestionAnswerPair(props: {
   );
 }
 
-const augmentPrompt = (context: string, title: string, question: string, currentQuestions: string[], currentAnswers: string[]) => {
+const augmentPrompt = (
+  context: string,
+  title: string,
+  question: string,
+  currentQuestions: string[],
+  currentAnswers: string[]
+) => {
   // Code to concatenate or format currentQuestions and currentAnswers into a single string, previousQA
-  const previousQA = currentQuestions.map((q, index) => `Q: ${q}\nA: ${currentAnswers[index] || 'Pending'}`).join('\n');
-  
+  const previousQA = currentQuestions
+    .map((q, index) => `Q: ${q}\nA: ${currentAnswers[index] || "Pending"}`)
+    .join("\n");
+
   return `
     I am a university student studying a lecture video titled ${title}. 
     I have included the video title and partial transcript for context on what I read.
@@ -80,7 +88,6 @@ const augmentPrompt = (context: string, title: string, question: string, current
     Answer:
   `;
 };
-
 
 const fetchTitle = async (id: string) => {
   const titleResp = await fetch(`/api/ytTitle?videoId=${id}`);
@@ -223,8 +230,10 @@ export default function Video() {
 
   const [currentQuestions, setCurrentQuestions] = useState<string[]>([]);
   const [currentAnswers, setCurrentAnswers] = useState<string[]>([]);
-  
-  const [lastActiveTimestamp, setLastActiveTimestamp] = useState<number | null>(null);
+
+  const [lastActiveTimestamp, setLastActiveTimestamp] = useState<number | null>(
+    null
+  );
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
@@ -338,7 +347,7 @@ export default function Video() {
     fetchTitle(videoId).then((data) => {
       setTitle(data);
     });
-    console.log("Done fetching title")
+
     getVideoTimeStamps(videoId).then((data) => {
       setTimeStamps(data);
     });
@@ -389,16 +398,18 @@ export default function Video() {
       setCurrentQuestions([]);
       setCurrentAnswers([]);
     }
-    
+
     setCurrentQuestions((prevQuestions) => [...prevQuestions, question]);
     setCurrentAnswers((prevAnswers) => [...prevAnswers, ""]);
-    console.log("About to start filtering")
     const context = filterSubtitles(subtitles, intervals, elapsedTime);
-    console.log("Done filtering")
 
     // Pass currentQuestions and currentAnswers arrays to augmentPrompt
-    const es = await callGenerateText(augmentPrompt(context, title, question, currentQuestions, currentAnswers));
-    console.log(augmentPrompt(context, title, question, currentQuestions, currentAnswers))
+    const es = await callGenerateText(
+      augmentPrompt(context, title, question, currentQuestions, currentAnswers)
+    );
+    console.log(
+      augmentPrompt(context, title, question, currentQuestions, currentAnswers)
+    );
 
     es.onmessage = async (event) => {
       if (event.data === "JimSu123!") {
@@ -418,7 +429,7 @@ export default function Video() {
               userTime: Date.now(),
             },
           ]);
-          setLastActiveTimestamp(elapsedTime);  // Update last active timestamp here
+          setLastActiveTimestamp(elapsedTime); // Update last active timestamp here
         });
         setSubmitting(false);
         setQuestion("");

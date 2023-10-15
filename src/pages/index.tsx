@@ -14,6 +14,7 @@ import { useTranslation } from "next-i18next";
 import "src/app/globals.css";
 import Navbar from "@/app/components/navbar";
 import Footer from "@/app/components/footer";
+import Head from "next/head";
 
 export async function getStaticProps(context: { locale: any }) {
   // extract the locale identifier from the URL
@@ -109,7 +110,10 @@ export default function Home() {
 
   return (
     <div>
-      <Navbar />
+      <Head>
+        <title>Lucid</title>
+      </Head>
+      <Navbar actionTitle={t("navBarButton")} actionUrl="/retrieve" />
       <main className={styles.mainContainer}>
         <Image
           className={styles.floatingAnimatedImage}

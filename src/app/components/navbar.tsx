@@ -1,12 +1,10 @@
 import Image from "next/image";
 import styles from "./style.module.css";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
 export default function Navbar(props: {
   actionUrl?: string;
   actionTitle?: string;
 }) {
-  const { t } = useTranslation();
   return (
     <div className={styles.navbar}>
       <a className={styles.navbar__logo} href="/">

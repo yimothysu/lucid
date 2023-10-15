@@ -8,6 +8,7 @@ import Navbar from "@/app/components/navbar";
 import { motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 const { colors } = theme;
 
 export async function getStaticProps(context: { locale: any }) {
