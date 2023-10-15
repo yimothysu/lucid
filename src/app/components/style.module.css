@@ -32,3 +32,11 @@
   font-weight: bold;
   filter: brightness(1.2);
 }
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: large;
+}

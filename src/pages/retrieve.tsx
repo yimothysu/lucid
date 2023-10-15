@@ -5,8 +5,21 @@ import { ArrowRight } from "react-feather";
 import Image from "next/image";
 import "@/app/globals.css";
 import Navbar from "@/app/components/navbar";
-
+import { motion } from "framer-motion";
 const { colors } = theme;
+
+function FadeUpComponent(props: { children: React.ReactNode; delay: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }} // Initial state
+      animate={{ opacity: 1, y: 0 }} // End state
+      exit={{ opacity: 0, y: 50 }} // Exit state
+      transition={{ duration: props.delay }} // Optional: Transition settings
+    >
+      {props.children}
+    </motion.div>
+  );
+}
 
 const YouTubeLinkInput = () => {
   const [link, setLink] = useState("");
@@ -32,20 +45,26 @@ const YouTubeLinkInput = () => {
     <div className="wrapper">
       <Navbar />
       <div className="container">
-        <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
-        <div className="title">Paste YouTube Link Here</div>
-        <form className="inputs" onSubmit={handleSubmit}>
-          <input
-            className="link-input"
-            type="text"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            placeholder="https://youtube.com/..."
-          />
-          <button className="submitButton" type="submit">
-            <ArrowRight />
-          </button>
-        </form>
+        <FadeUpComponent delay={0.5}>
+          <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
+        </FadeUpComponent>
+        <FadeUpComponent delay={0.7}>
+          <div className="title">Paste YouTube Link Here</div>
+        </FadeUpComponent>
+        <FadeUpComponent delay={0.9}>
+          <form className="inputs" onSubmit={handleSubmit}>
+            <input
+              className="link-input"
+              type="text"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+              placeholder="https://youtube.com/..."
+            />
+            <button className="submitButton" type="submit">
+              <ArrowRight />
+            </button>
+          </form>
+        </FadeUpComponent>
       </div>
       <style jsx>{`
         .wrapper {

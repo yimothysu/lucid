@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.13",
+    "circle-flags": "github:HatScripts/circle-flags",
     "firebase": "^10.5.0",
     "framer-motion": "^10.16.4",
     "next": "13.5.4",
