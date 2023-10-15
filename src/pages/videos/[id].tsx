@@ -11,6 +11,34 @@ import Navbar from "@/app/components/navbar";
 
 const PROGRESS_INTERVAL_MS = 500;
 
+const augmentPrompt = (context: string, question: string) => {
+  return `
+  I am a universtiy student and have a question about a topic covered in a lecture video.
+  I have included part of the lecture transcript for context.
+  Please answer my question succinctly.
+  ---
+  Context:
+  ${context}
+  ---
+  Question:
+  ${question}
+  `;
+};
+
+const filterSubtitles = (
+  subtitles: any,
+  intervals: any[],
+  elapsedTime: number
+) => {
+  return subtitles?.subtitles
+    .filter((subtitle: any, index: any) => {
+      const [startIndex, endIndex] = whatToRender(intervals, elapsedTime);
+      return index >= startIndex && index <= endIndex;
+    })
+    .map((subtitle: any) => subtitle.text.replace(/\[.*\]/g, ""))
+    .join(" ");
+};
+
 interface QuestionAndAnswerProps {
   question: string;
   answer: string;
@@ -269,7 +297,8 @@ export default function Video() {
 
     setSubmitting(true);
     setCurrentQuestion(question);
-    const es = await callGenerateText(question);
+    const context = filterSubtitles(subtitles, intervals, elapsedTime);
+    const es = await callGenerateText(augmentPrompt(context, question));
     es.onmessage = async (event) => {
       if (event.data === "JimSu123!") {
         const titleResp = await fetch(`/api/ytTitle?videoId=${id}`);
@@ -376,16 +405,7 @@ export default function Video() {
           />
           <div className="info-box">
             <textarea
-              value={subtitles?.subtitles
-                .filter((subtitle, index) => {
-                  const [startIndex, endIndex] = whatToRender(
-                    intervals,
-                    elapsedTime
-                  );
-                  return index >= startIndex && index <= endIndex;
-                })
-                .map((subtitle) => subtitle.text.replace(/\[.*\]/g, ""))
-                .join(" ")}
+              value={filterSubtitles(subtitles, intervals, elapsedTime)}
               readOnly
               style={{
                 width: "100%",
