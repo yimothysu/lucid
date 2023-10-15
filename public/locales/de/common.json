@@ -2,6 +2,9 @@
     "title": "Bildung neu erfunden, eine teuflische Konferenz auf einmal.",
     "tryButton": "Jetzt ausprobieren",
     "navBarButton": "Jetzt Ausprobieren",
+    "navBarButtonView": "Aktuelle Vorlesung anzeigen",
+    "navBarButtonNew": "Neue Vorlesung",
+    
     "retrieveText": "Füge den YouTube-Link hier ein",
     
     "generatingText": "Generiere...",

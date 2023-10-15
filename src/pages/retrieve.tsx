@@ -72,7 +72,7 @@ const YouTubeLinkInput = () => {
 
   return (
     <div className="wrapper">
-      <Navbar actionTitle="View Current Lectures" actionUrl="/" />
+      <Navbar actionTitle={t("navBarButtonView")} actionUrl="/" />
       <div className="container">
         <FadeUpComponent delay={0.5}>
           <Image src="/logo-v0.png" alt="logo" width={80} height={80} />

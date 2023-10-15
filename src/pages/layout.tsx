@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Navbar from "../app/components/navbar";
 import Footer from "../app/components/footer";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "react-i18next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,10 +30,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar actionTitle="Try Now" actionUrl="/retrieve" />
+        <Navbar actionTitle={t("navBarButton")} actionUrl="/retrieve" />
         {children}
         <Footer />
       </body>

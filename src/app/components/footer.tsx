@@ -4,7 +4,7 @@ export default function Footer() {
   const countries = [
     {
       countryCode: "us",
-      link: "",
+      link: "en",
     },
     {
       countryCode: "es",
@@ -38,9 +38,9 @@ export default function Footer() {
       {countries.map((item, index) => {
         return (
           <Link
-            key={`${item.countryCode}`}
-            href={`${item.link}/`}
-            locale={item.countryCode}
+            key={`${item.countryCode} ${index}`}
+            href={`${item.link}`}
+            locale={item.link}
           >
             <CircleFlag
               countryCode={`${item.countryCode}`}

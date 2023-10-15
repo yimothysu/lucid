@@ -2,6 +2,9 @@
     "title": "Education reimagined, one lecture at a time.",
     "tryButton": "Try it Now",
     "navBarButton": "Try Now",
+    "navBarButtonView": "View Current Lecture",
+    "navBarButtonNew": "New Lecture",
+
     "retrieveText": "Paste YouTube Link Here",
 
     "generatingText": "Generating...",
