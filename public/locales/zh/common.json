@@ -11,5 +11,6 @@
     "generatingError": "生成答案时发生了错误。",
     "generatingProgress": "点击进度条以查看问题和答案",
     "geneartingAsk": "提出问题",
-    "generatedMuted": "静音。按下麦克风按钮开始录音。"
+    "generatedMuted": "静音。按下麦克风按钮开始录音。",
+    "placeholderQuestion": "问题"
 }

@@ -11,6 +11,7 @@
     "generatingError": "Terjadi kesalahan saat menghasilkan jawaban untuk pertanyaan ini.",
     "generatingProgress": "Klik pada bilah kemajuan untuk melihat pertanyaan dan jawaban",
     "geneartingAsk": "Ajukan Pertanyaan",
-    "generatedMuted": "Bisu. Tekan tombol mikrofon untuk memulai perekaman."
+    "generatedMuted": "Bisu. Tekan tombol mikrofon untuk memulai perekaman.",
+    "placeholderQuestion": "Pertanyaan"
 }
     

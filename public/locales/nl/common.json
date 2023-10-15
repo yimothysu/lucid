@@ -11,5 +11,6 @@
     "generatingError": "Er is een fout opgetreden bij het genereren van een antwoord op deze vraag.",
     "generatingProgress": "Klik op de voortgangsbalk om vragen en antwoorden te zien",
     "geneartingAsk": "Stel een vraag",
-    "generatedMuted": "Gedempt. Druk op de microfoonknop om te beginnen met opnemen."
+    "generatedMuted": "Gedempt. Druk op de microfoonknop om te beginnen met opnemen.",
+    "placeholderQuestion": "Vraag"
 }

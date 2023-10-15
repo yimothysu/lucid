@@ -59,28 +59,28 @@ function QuestionAnswerPair(props: {
   );
 }
 
-const augmentPrompt = (context: string, title: string, question: string) => {
+const augmentPrompt = (context: string, title: string, question: string, currentQuestions: string[], currentAnswers: string[]) => {
+  // Code to concatenate or format currentQuestions and currentAnswers into a single string, previousQA
+  const previousQA = currentQuestions.map((q, index) => `Q: ${q}\nA: ${currentAnswers[index] || 'Pending'}`).join('\n');
+  
   return `
-  Please answer the question.
-  I am a university student studying a lecture video.
-  I have included the video title and partial transcript for context.
-  Please answer my question succinctly.
-  ---
-  Title:
-  ${title}
-  ---
-  Transcript:
-  ${context}
-
-  ---
-  Question:
-  ${question}
-
-  ---
-  Instructions:
-  Please answer the question.
+    I am a university student studying a lecture video titled ${title}. 
+    I have included the video title and partial transcript for context on what I read.
+    ---
+    Transcript:
+    ${context}
+    ---
+    Here is my previous conversation with my professor.
+    ${previousQA}
+    ---
+    Please answer my following question.
+    Question:
+    ${question}
+    ---
+    Answer:
   `;
 };
+
 
 const fetchTitle = async (id: string) => {
   const titleResp = await fetch(`/api/ytTitle?videoId=${id}`);
@@ -223,10 +223,13 @@ export default function Video() {
 
   const [currentQuestions, setCurrentQuestions] = useState<string[]>([]);
   const [currentAnswers, setCurrentAnswers] = useState<string[]>([]);
+  
+  const [lastActiveTimestamp, setLastActiveTimestamp] = useState<number | null>(null);
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
   const [subtitles, setSubtitles] = useState<subItems>();
+  const [title, setTitle] = useState<string>("");
 
   // Define state variables for the result, recording status, and media recorder
   const [result, setResult] = useState();
@@ -276,10 +279,8 @@ export default function Video() {
                     },
                     body: JSON.stringify({ audio: base64Audio }),
                   });
-                  console.log("here1");
                   const data = await response.json();
                   console.log(data);
-                  console.log("here2");
                   if (response.status !== 200) {
                     throw (
                       data.error ||
@@ -334,6 +335,10 @@ export default function Video() {
     if (!videoId || Array.isArray(videoId)) {
       return;
     }
+    fetchTitle(videoId).then((data) => {
+      setTitle(data);
+    });
+    console.log("Done fetching title")
     getVideoTimeStamps(videoId).then((data) => {
       setTimeStamps(data);
     });
@@ -343,31 +348,32 @@ export default function Video() {
     return <main className={styles.main}></main>;
   }
 
-
   const fetchAudioData = async (text: string) => {
     try {
       const response = await fetch(`/api/give-audio?text=${text}`);
-    
+
       if (response.ok) {
         const chunksAnswer = await response.arrayBuffer();
-        const audioBlobCur = new Blob([chunksAnswer], { type: 'audio/mp3' });
+        const audioBlobCur = new Blob([chunksAnswer], { type: "audio/mp3" });
         const audioUrlCur = URL.createObjectURL(audioBlobCur);
         const audioCur = new Audio(audioUrlCur);
-  
+
         audioCur.onerror = function (err) {
           console.error("Error playing audio:", err);
         };
-        
+
         audioCur.play();
       } else {
-        console.error('Failed to fetch audio:', response.status, response.statusText);
+        console.error(
+          "Failed to fetch audio:",
+          response.status,
+          response.statusText
+        );
       }
     } catch (error) {
       console.error("An error occurred:", error);
     }
   };
-
-
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -377,11 +383,23 @@ export default function Video() {
 
     let localCurrentAnswer = "";
     setSubmitting(true);
+
+    if (lastActiveTimestamp !== null && lastActiveTimestamp !== elapsedTime) {
+      // Reset current questions and answers
+      setCurrentQuestions([]);
+      setCurrentAnswers([]);
+    }
+    
     setCurrentQuestions((prevQuestions) => [...prevQuestions, question]);
     setCurrentAnswers((prevAnswers) => [...prevAnswers, ""]);
+    console.log("About to start filtering")
     const context = filterSubtitles(subtitles, intervals, elapsedTime);
-    const title = await fetchTitle(videoId);
-    const es = await callGenerateText(augmentPrompt(context, title, question));
+    console.log("Done filtering")
+
+    // Pass currentQuestions and currentAnswers arrays to augmentPrompt
+    const es = await callGenerateText(augmentPrompt(context, title, question, currentQuestions, currentAnswers));
+    console.log(augmentPrompt(context, title, question, currentQuestions, currentAnswers))
+
     es.onmessage = async (event) => {
       if (event.data === "JimSu123!") {
         addVideoQuestion({
@@ -400,10 +418,15 @@ export default function Video() {
               userTime: Date.now(),
             },
           ]);
+          setLastActiveTimestamp(elapsedTime);  // Update last active timestamp here
         });
         setSubmitting(false);
         setQuestion("");
-        fetchAudioData(localCurrentAnswer).then(() => {console.log("here")}).catch((e)=>console.log(e));
+        fetchAudioData(localCurrentAnswer)
+          .then(() => {
+            console.log("here");
+          })
+          .catch((e) => console.log(e));
 
         es.close();
       } else {
@@ -445,7 +468,7 @@ export default function Video() {
     setCurrentQuestions(questions);
     setCurrentAnswers(answers);
     setElapsedTime(clickedTimestamp.timestamp);
-    setProgress(clickedTimestamp.timestamp);
+    setLastActiveTimestamp(clickedTimestamp.timestamp);
   };
 
   const setProgress = (time: number) => {
@@ -548,7 +571,7 @@ export default function Video() {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           className={styles.questionInput}
-          placeholder="Question"
+          placeholder={t("placeholderQuestion")}
         />
 
         <div className={styles.buttonContainer}>

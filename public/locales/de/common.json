@@ -11,5 +11,6 @@
     "generatingError": "Ein Fehler ist beim Generieren einer Antwort auf diese Frage aufgetreten.",
     "generatingProgress": "Klicke auf die Fortschrittsleiste, um Fragen und Antworten zu sehen",
     "geneartingAsk": "Stelle eine Frage",
-    "generatedMuted": "Stummgeschaltet. Drücke den Mikrofon-Button, um die Aufnahme zu starten."
+    "generatedMuted": "Stummgeschaltet. Drücke den Mikrofon-Button, um die Aufnahme zu starten.",
+    "placeholderQuestion": "Frage"
 }
