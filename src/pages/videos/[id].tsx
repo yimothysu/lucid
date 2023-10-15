@@ -12,6 +12,8 @@ import Navbar from "@/app/components/navbar";
 import { LiveAudioVisualizer } from "react-audio-visualize";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Head from "next/head";
+import Footer from "@/app/components/footer";
 
 export async function getStaticProps(context: { locale: any }) {
   // extract the locale identifier from the URL
@@ -523,6 +525,10 @@ export default function Video() {
 
   return (
     <main className={styles.main}>
+      <Head>
+        <title>Lucid - View</title>
+        <link rel="shortcut icon" href="../../../favicon.ico" />
+      </Head>
       <Navbar actionTitle={t("navBarButtonNew")} actionUrl="/retrieve" />
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
@@ -613,7 +619,7 @@ export default function Video() {
           }}
         ></div>
       </div>
-      <div></div>
+      <Footer />
     </main>
   );
 }

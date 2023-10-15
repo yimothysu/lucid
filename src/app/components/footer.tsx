@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CircleFlag } from "react-circle-flags";
+import { useRouter } from "next/router";
 export default function Footer() {
   const countries = [
     {
@@ -72,6 +73,8 @@ export default function Footer() {
     },
   ];
 
+  const router = useRouter();
+
   return (
     <div
       style={{
@@ -88,7 +91,7 @@ export default function Footer() {
         return (
           <Link
             key={`${item.countryCode} ${index}`}
-            href={`${item.link}`}
+            href={`/${item.link + "/" + router.asPath}`}
             locale={item.link}
           >
             <CircleFlag

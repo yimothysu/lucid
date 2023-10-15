@@ -8,6 +8,8 @@ import Navbar from "@/app/components/navbar";
 import { motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Head from "next/head";
+import Footer from "@/app/components/footer";
 
 const { colors } = theme;
 
@@ -73,6 +75,10 @@ const YouTubeLinkInput = () => {
 
   return (
     <div className="wrapper">
+      <Head>
+        <title>Lucid - Add a video</title>
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </Head>
       <Navbar actionTitle={t("navBarButtonView")} actionUrl="/" />
       <div className="container">
         <FadeUpComponent delay={0.5}>
@@ -98,6 +104,7 @@ const YouTubeLinkInput = () => {
           </form>
         </FadeUpComponent>
       </div>
+      <Footer />
       <style jsx>{`
         .wrapper {
           background-color: ${colors.funOffWhite};
