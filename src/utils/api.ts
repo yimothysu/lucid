@@ -24,15 +24,16 @@ export async function callGenerateText(promptText: string) {
 /**
  * callGenerateImage - Function to generate image using fetch API
  * @param {string} prompt - The prompt text to generate image from
+ * @param {string} [size="1024x1024"] - The size of the generated image
  * @returns {Promise<string>} - The Promise object represents the URL of the generated image
  */
-export async function callGenerateImage(prompt: string) {
+export async function callGenerateImage(prompt: string, size: "256x256" | "512x512" | "1024x1024" | null | undefined = "1024x1024") {
     const response = await fetch('/api/generateImage', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt, size }),
     });
 
     if (!response.ok) {

@@ -15,12 +15,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       
     const sendHelloWorld = setInterval(() => {
         res.write(`data: Hello, world!\n\n`);
-      }, 1000);
+    }, 1000);
       
-      res.write(`Done`);
+    res.write(`Done`);
     
     
-      req.on('close', () => {
+    req.on('close', () => {
       // clearInterval(sendHelloWorld);
       res.end();
     });

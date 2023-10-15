@@ -33,11 +33,11 @@ export async function* streamGPT3(question: string) {
 }
 
 // Function to directly call DALL-E and return link to image
-export async function callDALLE(prompt: string) {
+export async function callDALLE(prompt: string, size: "256x256" | "512x512" | "1024x1024" | null | undefined = "1024x1024") {
   const response = await openai.images.generate({
     prompt: prompt,
     n: 1,
-    size: "256x256",
+    size: size,
   });
   console.log("Image URL: ", response.data[0].url)
   return response.data[0].url;
