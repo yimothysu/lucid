@@ -11,34 +11,8 @@ import Navbar from "@/app/components/navbar";
 import Avatar from "react-avatar";
 // @ts-ignore
 import { LiveAudioVisualizer } from "react-audio-visualize";
-import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
 import Footer from "@/app/components/footer";
-
-export async function getStaticProps(context: { locale: any }) {
-  // extract the locale identifier from the URL
-  let data = {};
-  try {
-    const { locale } = context;
-    // pass the translation props to the page component
-    data = { ...(await serverSideTranslations(locale)) };
-  } catch (e) {
-    console.log(e);
-  }
-  return {
-    props: {
-      ...data,
-    },
-  };
-}
-
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: true,
-  };
-}
 
 const PROGRESS_INTERVAL_MS = 500;
 
@@ -281,7 +255,6 @@ export default function Video() {
   const router = useRouter();
   const { id } = router.query;
   const videoId = id;
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -555,7 +528,7 @@ export default function Video() {
         <title>Lucid - View</title>
         <link rel="shortcut icon" href="../../../favicon.ico" />
       </Head>
-      <Navbar actionTitle={t("navBarButtonNew")} actionUrl="/retrieve" />
+      <Navbar actionTitle={"New Lecture"} actionUrl="/retrieve" />
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
           <ReactPlayer
@@ -601,20 +574,22 @@ export default function Video() {
               </div>
             </div>
           ) : (
-            <div className={styles.starterText}>{t("generatingProgress")}</div>
+            <div className={styles.starterText}>
+              Click on the progress bar to see questions and answers
+            </div>
           )}
         </div>
       </div>
       <div className={styles.questionForm} onSubmit={onSubmit}>
         <label htmlFor="question" className={styles.questionLabel}>
-          {t("geneartingAsk")}
+          Ask a Question
         </label>
         <textarea
           id="question"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           className={styles.questionInput}
-          placeholder={t("placeholderQuestion")}
+          placeholder={"Question"}
         />
 
         <div className={styles.buttonContainer}>
@@ -635,7 +610,9 @@ export default function Video() {
                 height={35}
               />
             ) : (
-              <span>{t("generatedMuted")}</span>
+              <span>
+                Muted. Press the microphone button to start recording.
+              </span>
             )}
           </div>
         </div>
