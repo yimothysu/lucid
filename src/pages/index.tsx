@@ -112,6 +112,7 @@ export default function Home() {
     <div>
       <Head>
         <title>Lucid</title>
+        <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
       <Navbar actionTitle={t("navBarButton")} actionUrl="/retrieve" />
       <main className={styles.mainContainer}>
