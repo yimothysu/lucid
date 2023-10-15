@@ -15,6 +15,7 @@ const PROGRESS_INTERVAL_MS = 500;
 
 const augmentPrompt = (context: string, title: string, question: string) => {
   return `
+  Please answer the question.
   I am a university student studying a lecture video.
   I have included the video title and partial transcript for context.
   Please answer my question succinctly.
@@ -24,9 +25,14 @@ const augmentPrompt = (context: string, title: string, question: string) => {
   ---
   Transcript:
   ${context}
+
   ---
   Question:
   ${question}
+
+  ---
+  Instructions:
+  Please answer the question.
   `;
 };
 
