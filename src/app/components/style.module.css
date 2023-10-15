@@ -40,3 +40,13 @@
   width: 100%;
   font-size: large;
 }
+
+.footer__countryImg {
+  
+}
+
+.footer__countryImg:hover {
+  box-shadow: 1px 5px 5px rgba(0, 0, 0, 0.15);
+  margin-top: -0.5rem;
+  transition: all 0.2s ease-in-out;
+}

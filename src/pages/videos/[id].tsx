@@ -10,8 +10,54 @@ import { callGenerateText } from "@/utils/api";
 import Navbar from "@/app/components/navbar";
 // @ts-ignore
 import { LiveAudioVisualizer } from "react-audio-visualize";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+export async function getStaticProps(context: { locale: any }) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: true,
+  };
+}
 
 const PROGRESS_INTERVAL_MS = 500;
+
+function QuestionAnswerPair(props: {
+  question: string;
+  answer?: string;
+  submitting: boolean;
+}) {
+  return (
+    <div className={styles.questionAnswerPair}>
+      <div className={styles.currentQuestion}>Student</div>
+      <div className={styles.currentQuestionText}>{props.question}</div>
+      <div className={styles.currentAnswer}>AI</div>
+      <div className={styles.currentAnswerText}>
+        {props.answer ? (
+          props.answer
+        ) : props.submitting ? (
+          <i>Generating...</i>
+        ) : (
+          <i>
+            An error occurred while generating an answer to these questions.
+          </i>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const augmentPrompt = (context: string, title: string, question: string) => {
   return `
@@ -69,6 +115,7 @@ interface Timestamp {
   timestamp: number;
   question: string;
   answer: string;
+  userTime: number;
 }
 
 type subItem = {
@@ -174,8 +221,8 @@ export default function Video() {
   const [question, setQuestion] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const [currentQuestion, setCurrentQuestion] = useState<string>("");
-  const [currentAnswer, setCurrentAnswer] = useState<string>("");
+  const [currentQuestions, setCurrentQuestions] = useState<string[]>([]);
+  const [currentAnswers, setCurrentAnswers] = useState<string[]>([]);
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
@@ -194,6 +241,7 @@ export default function Video() {
   const router = useRouter();
   const { id } = router.query;
   const videoId = id;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -261,6 +309,26 @@ export default function Video() {
     }
   }, []);
 
+  const lang = "en";
+
+  useEffect(() => {
+    const fetchSubtitles = async (videoID = id) => {
+      try {
+        const response = await fetch(
+          `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
+        );
+        //console.log("Here!");
+        const data = await response.json();
+        //console.log(data);
+
+        setSubtitles(data);
+      } catch (error) {
+        console.error("Error fetching subtitles:", error);
+      }
+    };
+
+    fetchSubtitles();
+  }, [id, lang]);
 
   useEffect(() => {
     if (!videoId || Array.isArray(videoId)) {
@@ -275,9 +343,6 @@ export default function Video() {
     return <main className={styles.main}></main>;
   }
 
-  
-
-  const lang = "en";
 
   const fetchAudioData = async (text: string) => {
     try {
@@ -302,22 +367,7 @@ export default function Video() {
     }
   };
 
-  const fetchSubtitles = async (videoID = id) => {
-    try {
-      const response = await fetch(
-        `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
-      );
-      //console.log("Here!");
-      const data = await response.json();
-      //console.log(data);
 
-      setSubtitles(data);
-    } catch (error) {
-      console.error("Error fetching subtitles:", error);
-    }
-  };
-
-  fetchSubtitles();
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -325,11 +375,10 @@ export default function Video() {
       return;
     }
 
-    // Use local variable to prevent race condition
     let localCurrentAnswer = "";
     setSubmitting(true);
-    setCurrentQuestion(question);
-    setCurrentAnswer("");
+    setCurrentQuestions((prevQuestions) => [...prevQuestions, question]);
+    setCurrentAnswers((prevAnswers) => [...prevAnswers, ""]);
     const context = filterSubtitles(subtitles, intervals, elapsedTime);
     const title = await fetchTitle(videoId);
     const es = await callGenerateText(augmentPrompt(context, title, question));
@@ -344,7 +393,12 @@ export default function Video() {
         }).then(() => {
           setTimeStamps([
             ...timeStamps,
-            { timestamp: elapsedTime, question, answer: localCurrentAnswer },
+            {
+              timestamp: elapsedTime,
+              question,
+              answer: localCurrentAnswer,
+              userTime: Date.now(),
+            },
           ]);
         });
         setSubmitting(false);
@@ -354,7 +408,11 @@ export default function Video() {
         es.close();
       } else {
         localCurrentAnswer += event.data;
-        setCurrentAnswer(localCurrentAnswer);
+        setCurrentAnswers((prevAnswers) => {
+          const newAnswers = [...prevAnswers];
+          newAnswers[newAnswers.length - 1] = localCurrentAnswer;
+          return newAnswers;
+        });
       }
     };
   };
@@ -368,11 +426,26 @@ export default function Video() {
     setElapsedTime(Math.floor(progress.playedSeconds));
   };
 
-  const onTimestampClick = (timestamp: Timestamp) => {
-    setCurrentQuestion(timestamp.question);
-    setCurrentAnswer(timestamp.answer);
-    setElapsedTime(timestamp.timestamp);
-    setProgress(timestamp.timestamp);
+  const onTimestampClick = (clickedTimestamp: Timestamp) => {
+    const matchingTimestamps = timeStamps.filter(
+      (timestamp) => timestamp.timestamp === clickedTimestamp.timestamp
+    );
+
+    // Sort the timestamps
+    matchingTimestamps.sort((a, b) => {
+      const timeA = a.userTime !== undefined ? a.userTime : a.timestamp;
+      const timeB = b.userTime !== undefined ? b.userTime : b.timestamp;
+
+      return timeA - timeB;
+    });
+
+    const questions = matchingTimestamps.map((timestamp) => timestamp.question);
+    const answers = matchingTimestamps.map((timestamp) => timestamp.answer);
+
+    setCurrentQuestions(questions);
+    setCurrentAnswers(answers);
+    setElapsedTime(clickedTimestamp.timestamp);
+    setProgress(clickedTimestamp.timestamp);
   };
 
   const setProgress = (time: number) => {
@@ -414,11 +487,9 @@ export default function Video() {
     }
   }
 
-  //console.log(intervals);
-
   return (
     <main className={styles.main}>
-      <Navbar actionTitle="New Lecture" actionUrl="/retrieve" />
+      <Navbar actionTitle={t("navBarButtonNew")} actionUrl="/retrieve" />
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
           <ReactPlayer
@@ -447,39 +518,30 @@ export default function Video() {
           </div>
         </div>
         <div className={styles.currentQuestionSection}>
-          {currentQuestion ? (
+          {currentQuestions.length > 0 ? (
             <div className={styles.threadContainer}>
               <div className={styles.threadTitle}>
                 Thread at {elapsedTime} seconds
               </div>
-              <div className={styles.currentQuestion}>Student</div>
-              <div className={styles.currentQuestionText}>
-                {currentQuestion}
-              </div>
-              <div className={styles.currentAnswer}>AI</div>
-              <div className={styles.currentAnswerText}>
-                {currentAnswer ? (
-                  currentAnswer
-                ) : submitting ? (
-                  <i>Generating...</i>
-                ) : (
-                  <i>
-                    An error occurred while generating an answer to this
-                    question.
-                  </i>
-                )}
+              <div className={styles.questionsSection}>
+                {currentQuestions.map((_, i) => (
+                  <QuestionAnswerPair
+                    key={i}
+                    question={currentQuestions[i]}
+                    answer={currentAnswers[i]}
+                    submitting={submitting}
+                  />
+                ))}
               </div>
             </div>
           ) : (
-            <div className={styles.starterText}>
-              Click on the progress bar to see questions and answers
-            </div>
+            <div className={styles.starterText}>{t("generatingProgress")}</div>
           )}
         </div>
       </div>
       <div className={styles.questionForm} onSubmit={onSubmit}>
         <label htmlFor="question" className={styles.questionLabel}>
-          Ask a Question
+          {t("geneartingAsk")}
         </label>
         <textarea
           id="question"
@@ -507,9 +569,7 @@ export default function Video() {
                 height={35}
               />
             ) : (
-              <span>
-                Muted. Press the microphone button to start recording.
-              </span>
+              <span>{t("generatedMuted")}</span>
             )}
           </div>
         </div>

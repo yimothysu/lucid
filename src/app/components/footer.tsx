@@ -1,20 +1,26 @@
+import Link from "next/link";
 import { CircleFlag } from "react-circle-flags";
-export default function Navbar() {
+export default function Footer() {
   const countries = [
     {
       countryCode: "us",
+      link: "en",
     },
     {
       countryCode: "es",
+      link: "es",
     },
     {
       countryCode: "fr",
+      link: "fr",
     },
     {
       countryCode: "de",
+      link: "de",
     },
     {
       countryCode: "in",
+      link: "in",
     },
   ];
 
@@ -31,11 +37,17 @@ export default function Navbar() {
     >
       {countries.map((item, index) => {
         return (
-          <CircleFlag
-            key={`${item.countryCode}`}
-            countryCode={`${item.countryCode}`}
-            height="50px"
-          />
+          <Link
+            key={`${item.countryCode} ${index}`}
+            href={`${item.link}`}
+            locale={item.link}
+          >
+            <CircleFlag
+              countryCode={`${item.countryCode}`}
+              height="50px"
+              className="footer__countryImg"
+            />
+          </Link>
         );
       })}
     </div>

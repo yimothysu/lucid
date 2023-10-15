@@ -6,7 +6,21 @@ import Image from "next/image";
 import "@/app/globals.css";
 import Navbar from "@/app/components/navbar";
 import { motion } from "framer-motion";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 const { colors } = theme;
+
+export async function getStaticProps(context: { locale: any }) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
 
 function FadeUpComponent(props: { children: React.ReactNode; delay: number }) {
   return (
@@ -25,6 +39,7 @@ const YouTubeLinkInput = () => {
   const [link, setLink] = useState("");
 
   const router = useRouter();
+  const { t } = useTranslation();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -57,13 +72,13 @@ const YouTubeLinkInput = () => {
 
   return (
     <div className="wrapper">
-      <Navbar actionTitle="View Current Lectures" actionUrl="/" />
+      <Navbar actionTitle={t("navBarButtonView")} actionUrl="/" />
       <div className="container">
         <FadeUpComponent delay={0.5}>
           <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
         </FadeUpComponent>
         <FadeUpComponent delay={0.7}>
-          <div className="title">Paste YouTube Link Here</div>
+          <div className="title">{t("retrieveText")}</div>
         </FadeUpComponent>
         <FadeUpComponent delay={0.9}>
           <form className="inputs" onSubmit={handleSubmit}>
@@ -75,7 +90,9 @@ const YouTubeLinkInput = () => {
               placeholder="https://youtube.com/..."
             />
             <button className="submitButton" type="submit">
-              <ArrowRight />
+              <div className="submitArrow">
+                <ArrowRight />
+              </div>
             </button>
           </form>
         </FadeUpComponent>
@@ -123,10 +140,23 @@ const YouTubeLinkInput = () => {
           font-size: 1rem;
           color: black;
           background-color: ${colors.secondary};
-          padding: 0.5rem 1rem;
-          padding-top: 0.7rem;
           height: 100%;
           vertical-align: middle;
+        }
+
+        .submitArrow {
+          padding: 0.5rem 1rem;
+          padding-top: 0.7rem;
+        }
+
+        .submitArrow:hover {
+          transform: translateX(-0.5rem);
+          transition: transform 0.2s ease-in-out;
+        }
+
+        .submitArrow:active {
+          transform: translateX(0.5rem);
+          transition: transform 0.2s ease-in-out;
         }
 
         .submitButton:hover {
