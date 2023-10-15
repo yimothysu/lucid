@@ -50,7 +50,7 @@ export default function Subtitles () {
         <div>
             {subtitles ? (
         <div>
-          <h1>Subtitles: {JSON.stringify(subtitles)}
+          <h1>{JSON.stringify(subtitles)}
           </h1>
           
         </div>

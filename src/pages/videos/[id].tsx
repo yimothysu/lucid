@@ -255,18 +255,7 @@ export default function Video() {
           style={{
             marginTop: "1rem",
           }}
-        >
-          {timeStamps &&
-            timeStamps.map((pair, index) => {
-              return (
-                <QuestionAndAnswer
-                  key={`${index}`}
-                  question={pair.question}
-                  answer={pair.answer}
-                />
-              );
-            })}
-        </div>
+        ></div>
       </form>
     </main>
   );
