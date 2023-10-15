@@ -6,6 +6,7 @@ import { ArrowRight } from "react-feather";
 import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
 import { useRouter } from "next/router";
+import { callGenerateText } from "@/utils/api";
 
 const PROGRESS_INTERVAL_MS = 500;
 
@@ -77,7 +78,6 @@ export default function Video() {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [question, setQuestion] = useState<string>("");
-  const [answer, setAnswer] = useState<string>("Answer");
 
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
@@ -101,22 +101,43 @@ export default function Video() {
     return <main className={styles.main}></main>;
   }
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     if (!videoId || Array.isArray(videoId)) {
       return;
     }
-    addVideoQuestion({
-      videoId: videoId,
-      question,
-      answer,
-      timestamp: elapsedTime,
-    }).then(() => {
-      setTimeStamps([
-        ...timeStamps,
-        { timestamp: elapsedTime, question, answer },
-      ]);
-    });
+
+    let llmAnswer = "";
+    const es = await callGenerateText(question);
+    es.onmessage = (event) => {
+      if (event.data === "JimSu123!") {
+        addVideoQuestion({
+          videoId: videoId,
+          question,
+          answer: llmAnswer,
+          timestamp: elapsedTime,
+        }).then(() => {
+          setTimeStamps([
+            ...timeStamps,
+            { timestamp: elapsedTime, question, answer: llmAnswer },
+          ]);
+        });
+
+        es.close();
+        return;
+      }
+
+      // The event object contains the data sent by the server
+      const eventData = JSON.parse(event.data);
+      llmAnswer += eventData;
+      console.log("Received event:", eventData);
+
+      // You can update your UI or perform other actions based on the received data
+    };
+    // for await (const part of stream) {
+    //   llmAnswer += part;
+    //   console.log(llmAnswer);
+    // }
   };
 
   const onReady = (player: any) => {
