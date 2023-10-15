@@ -42,7 +42,7 @@
 }
 
 .footer__countryImg {
-  
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 .footer__countryImg:hover {

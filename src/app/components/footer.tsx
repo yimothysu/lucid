@@ -98,6 +98,10 @@ export default function Footer() {
               countryCode={`${item.countryCode}`}
               height="50px"
               className="footer__countryImg"
+              style={{
+                border: "1px solid rgba(0, 0, 0, 0.1)",
+                borderRadius: "50%",
+              }}
             />
           </Link>
         );
