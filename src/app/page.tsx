@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getRandomVideos } from "./firebase/firestore";
+import Link from "next/link";
 
 function getThumbnailUrl(videoId: string) {
   return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
@@ -109,19 +110,19 @@ export default function Home() {
           marginTop: "2rem",
         }}
       >
-        <span className={styles.actionButton__span}>Try it Now</span>
+        <span className={styles.actionButton__span}>Try It Now</span>
         <ArrowRight />
       </button>
       <div className={styles.cardsGrid}>
         {cards.map((card, index) => (
-          <a href={`/videos/${card.videoId}`} key={card.videoId}>
+          <Link href={`/videos/${card.videoId}`} key={card.videoId}>
             <Card id={index} {...card} />
-          </a>
+          </Link>
         ))}
       </div>
       <motion.div
         initial={{ scale: 1, opacity: 0 }}
-        animate={animateBackground ? { scale: 50, opacity: 1 } : {}}
+        animate={animateBackground ? { scale: 1, opacity: 1 } : {}}
         transition={{ duration: 0.2 }}
         style={
           animateBackground
@@ -129,6 +130,8 @@ export default function Home() {
                 width: "100vw",
                 height: "100vh",
                 backgroundColor: theme.colors.primary,
+                position: "absolute",
+                top: 0,
               }
             : {}
         }

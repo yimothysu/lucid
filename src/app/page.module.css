@@ -23,7 +23,9 @@
 }
 
 .cardContainer:hover {
-  background-color: #e8e8e8;
+  box-shadow: 1px 5px 5px rgba(0, 0, 0, 0.15);
+  margin-top: -0.5rem;
+  transition: all 0.2s ease-in-out;
 }
 
 .cardSampleQuestion {
@@ -53,16 +55,16 @@
 }
 
 @media (max-width: 768px) {
-    .cardsGrid {
-      grid-template-columns: 1fr 1fr;
-    }
+  .cardsGrid {
+    grid-template-columns: 1fr 1fr;
   }
+}
 
 .actionButton {
   font-size: 1.5rem;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
-  background-color: #98eecc;
+  background-color: #bef5d0;
   display: flex;
   align-items: center;
   margin-bottom: 3rem;
@@ -71,7 +73,8 @@
 }
 
 .actionButton:hover {
-  background-color: #6fd19e;
+  background-color: #98eecc;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .actionButton__span {

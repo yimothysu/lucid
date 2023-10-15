@@ -90,6 +90,7 @@ const YouTubeLinkInput = () => {
         .inputs {
           display: flex;
           height: 3rem;
+          box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .link-input {

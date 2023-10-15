@@ -37,39 +37,39 @@
 }
 
 .buttonContainer {
-    display: flex; /* Use flexbox to create a horizontal layout */
-    align-items: center; /* Vertically center the buttons */
-    margin-top: 5px;
-  }
+  display: flex; /* Use flexbox to create a horizontal layout */
+  align-items: center; /* Vertically center the buttons */
+  margin-top: 5px;
+}
 
 .questionSubmit {
-    
   margin-right: 10px;
   padding: 0.25rem 1rem;
   padding-top: 0.4rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background-color: #98eecc;
+  border: 1px solid rgba(193, 209, 198, 0.1);
+  color: rgba(0, 0, 0, 0.8);
+  background-color: #bef5d0;
   width: min-content;
   cursor: pointer;
 }
 
 .questionSubmit:hover {
-  background-color: #6fd19e;
+  background-color: #98eecc;
 }
 
 .questionMic {
-    padding: 0.25rem 1rem;
-    padding-top: 0.4rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: #98eecc;
-    width: min-content;
-    cursor: pointer;
-  }
+  padding: 0.25rem 1rem;
+  padding-top: 0.4rem;
+  border: 1px solid rgba(193, 209, 198, 0.1);
+  color: rgba(0, 0, 0, 0.8);
+  background-color: #bef5d0;
+  width: min-content;
+  cursor: pointer;
+}
 
-  .questionMic:hover {
-    background-color: #6fd19e;
-  }
-
+.questionMic:hover {
+  background-color: #98eecc;
+}
 
 .videoSection {
   width: 50%;
@@ -119,7 +119,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .showQuestions {
@@ -137,7 +137,7 @@
   background-color: #94e0ad;
 }
 
-.info-box{
-    width: 100%;
-    height: 200px;
+.info-box {
+  width: 100%;
+  height: 200px;
 }
