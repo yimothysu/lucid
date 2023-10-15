@@ -5,7 +5,7 @@ import styles from "./video.module.css";
 import { ArrowRight, Mic, MicOff } from "react-feather";
 import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { callGenerateText } from "@/utils/api";
 import Navbar from "@/app/components/navbar";
 // @ts-ignore
@@ -13,18 +13,28 @@ import { LiveAudioVisualizer } from "react-audio-visualize";
 
 const PROGRESS_INTERVAL_MS = 500;
 
-const augmentPrompt = (context: string, question: string) => {
+const augmentPrompt = (context: string, title: string, question: string) => {
   return `
-  I am a universtiy student and have a question about a topic covered in a lecture video.
-  I have included part of the lecture transcript for context.
+  I am a university student studying a lecture video.
+  I have included the video title and partial transcript for context.
   Please answer my question succinctly.
   ---
-  Context:
+  Title:
+  ${title}
+  ---
+  Transcript:
   ${context}
   ---
   Question:
   ${question}
   `;
+};
+
+const fetchTitle = async (id: string) => {
+  const titleResp = await fetch(`/api/ytTitle?videoId=${id}`);
+  const title = await titleResp.text();
+  const cleanedTitle = title.substring(1, title.length - 1);
+  return cleanedTitle;
 };
 
 const filterSubtitles = (
@@ -40,22 +50,6 @@ const filterSubtitles = (
     .map((subtitle: any) => subtitle.text.replace(/\[.*\]/g, ""))
     .join(" ");
 };
-
-interface QuestionAndAnswerProps {
-  question: string;
-  answer: string;
-}
-
-function QuestionAndAnswer(props: QuestionAndAnswerProps) {
-  return (
-    <div className={styles.questionAndAnswer}>
-      <div className={styles.question}>Question</div>
-      <div className={styles.questionText}>{props.question}</div>
-      <div className={styles.answer}>Answer</div>
-      <div className={styles.answerText}>{props.answer}</div>
-    </div>
-  );
-}
 
 interface ProgressBarProps {
   progress: number;
@@ -303,20 +297,18 @@ export default function Video() {
     let localCurrentAnswer = "";
     setSubmitting(true);
     setCurrentQuestion(question);
+    setCurrentAnswer("");
     const context = filterSubtitles(subtitles, intervals, elapsedTime);
-    const es = await callGenerateText(augmentPrompt(context, question));
+    const title = await fetchTitle(videoId);
+    const es = await callGenerateText(augmentPrompt(context, title, question));
     es.onmessage = async (event) => {
       if (event.data === "JimSu123!") {
-        const titleResp = await fetch(`/api/ytTitle?videoId=${id}`);
-        const title = await titleResp.text();
-        const cleanedTitle = title.substring(1, title.length - 1);
-
         addVideoQuestion({
           videoId: videoId,
           question,
           answer: localCurrentAnswer,
           timestamp: elapsedTime,
-          title: cleanedTitle,
+          title: title,
         }).then(() => {
           setTimeStamps([
             ...timeStamps,
@@ -329,7 +321,7 @@ export default function Video() {
         es.close();
       } else {
         localCurrentAnswer += event.data;
-        setCurrentAnswer((prevText) => `${prevText}${event.data}`);
+        setCurrentAnswer(localCurrentAnswer);
       }
     };
   };
@@ -432,6 +424,8 @@ export default function Video() {
               <div className={styles.currentAnswerText}>
                 {currentAnswer ? (
                   currentAnswer
+                ) : submitting ? (
+                  <i>Generating...</i>
                 ) : (
                   <i>
                     An error occurred while generating an answer to this
