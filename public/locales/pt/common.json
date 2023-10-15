@@ -1,0 +1,15 @@
+{
+    "title": "Educação reinventada, uma palestra de cada vez.",
+    "tryButton": "Experimente agora",
+    "navBarButton": "Experimente agora",
+    "navBarButtonView": "Ver Palestra Atual",
+    "navBarButtonNew": "Nova Palestra",
+
+    "retrieveText": "Cole o link do YouTube aqui",
+
+    "generatingText": "Gerando...",
+    "generatingError": "Ocorreu um erro ao gerar uma resposta para esta pergunta.",
+    "generatingProgress": "Clique na barra de progresso para ver perguntas e respostas",
+    "geneartingAsk": "Faça uma pergunta",
+    "generatedMuted": "Mudo. Pressione o botão do microfone para começar a gravar."
+}

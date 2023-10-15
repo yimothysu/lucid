@@ -1,0 +1,15 @@
+{
+    "title": "한 번의 강의로 다시 상상되는 교육.",
+    "tryButton": "지금 시도해보기",
+    "navBarButton": "지금 시도해보기",
+    "navBarButtonView": "현재 강의 보기",
+    "navBarButtonNew": "새 강의",
+
+    "retrieveText": "여기에 YouTube 링크 붙여넣기",
+
+    "generatingText": "생성 중...",
+    "generatingError": "이 질문에 대한 답을 생성하는 동안 오류가 발생했습니다.",
+    "generatingProgress": "프로그레스 바를 클릭하여 질문과 답변 보기",
+    "geneartingAsk": "질문하기",
+    "generatedMuted": "음소거. 마이크 버튼을 눌러 녹음을 시작하세요."
+}

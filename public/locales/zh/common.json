@@ -1,0 +1,15 @@
+{
+    "title": "重新想象教育，一次讲座。",
+    "tryButton": "现在尝试",
+    "navBarButton": "现在尝试",
+    "navBarButtonView": "查看当前讲座",
+    "navBarButtonNew": "新讲座",
+
+    "retrieveText": "在这里粘贴YouTube链接",
+
+    "generatingText": "生成中...",
+    "generatingError": "生成答案时发生了错误。",
+    "generatingProgress": "点击进度条以查看问题和答案",
+    "geneartingAsk": "提出问题",
+    "generatedMuted": "静音。按下麦克风按钮开始录音。"
+}

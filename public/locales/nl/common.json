@@ -1,0 +1,15 @@
+{
+    "title": "Onderwijs opnieuw bedacht, één lezing tegelijk.",
+    "tryButton": "Probeer het nu",
+    "navBarButton": "Probeer het nu",
+    "navBarButtonView": "Bekijk huidige lezing",
+    "navBarButtonNew": "Nieuwe lezing",
+
+    "retrieveText": "Plak hier de YouTube-link",
+
+    "generatingText": "Genereren...",
+    "generatingError": "Er is een fout opgetreden bij het genereren van een antwoord op deze vraag.",
+    "generatingProgress": "Klik op de voortgangsbalk om vragen en antwoorden te zien",
+    "geneartingAsk": "Stel een vraag",
+    "generatedMuted": "Gedempt. Druk op de microfoonknop om te beginnen met opnemen."
+}
