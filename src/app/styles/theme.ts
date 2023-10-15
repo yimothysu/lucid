@@ -15,6 +15,7 @@ const theme = {
     background: "#A4907C",
     backgroundHover: "#8a745f",
     contrast: "#FBFFDC",
+    funOffWhite: "#f9f9fd",
   },
 };
 
