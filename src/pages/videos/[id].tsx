@@ -445,7 +445,7 @@ export default function Video() {
             </div>
           ) : (
             <div className={styles.starterText}>
-              Click on the progress bar to see questions and answers
+              Click on the progress bar to view questions and answers
             </div>
           )}
         </div>

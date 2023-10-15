@@ -75,7 +75,9 @@ const YouTubeLinkInput = () => {
               placeholder="https://youtube.com/..."
             />
             <button className="submitButton" type="submit">
-              <ArrowRight />
+              <div className="submitArrow">
+                <ArrowRight />
+              </div>
             </button>
           </form>
         </FadeUpComponent>
@@ -123,10 +125,23 @@ const YouTubeLinkInput = () => {
           font-size: 1rem;
           color: black;
           background-color: ${colors.secondary};
-          padding: 0.5rem 1rem;
-          padding-top: 0.7rem;
           height: 100%;
           vertical-align: middle;
+        }
+
+        .submitArrow {
+          padding: 0.5rem 1rem;
+          padding-top: 0.7rem;
+        }
+
+        .submitArrow:hover {
+          transform: translateX(-0.5rem);
+          transition: transform 0.2s ease-in-out;
+        }
+
+        .submitArrow:active {
+          transform: translateX(0.5rem);
+          transition: transform 0.2s ease-in-out;
         }
 
         .submitButton:hover {
