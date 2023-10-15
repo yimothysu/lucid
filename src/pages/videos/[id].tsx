@@ -151,6 +151,12 @@ export default function Video() {
 
   const [subtitles, setSubtitles] = useState<subItems>();
 
+  const [result, setResult] = useState();
+  const [recording, setRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+
+  let chunks : BlobPart[] = [];
+
   const router = useRouter();
   const { id } = router.query;
   const videoId = id;
@@ -175,9 +181,9 @@ export default function Video() {
       const response = await fetch(
         `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
       );
-      console.log("Here!");
+      //console.log("Here!");
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
 
       setSubtitles(data);
     } catch (error) {
@@ -186,6 +192,68 @@ export default function Video() {
   };
 
   fetchSubtitles();
+
+  if (typeof window !== 'undefined') {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        const newMediaRecorder = new MediaRecorder(stream);
+        newMediaRecorder.onstart = () => {
+            console.log("zoom!")
+          chunks = [];
+        };
+        newMediaRecorder.ondataavailable = e => {
+          chunks.push(e.data);
+        };
+        newMediaRecorder.onstop = async () => {
+            console.log("I have stop")
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          const audio = new Audio(audioUrl);
+          audio.onerror = function (err) {
+            console.error('Error playing audio:', err);
+          };
+          audio.play();
+          try {
+            const reader = new FileReader();
+            reader.readAsDataURL(audioBlob);
+            reader.onloadend = async function () {
+              if(reader.result)
+              {
+                const base64Audio = (reader.result as string).split(',')[1]; // Remove the data URL prefix
+                const response = await fetch("/api/speechToText", {
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ audio: base64Audio }),
+              });
+              console.log("here1")
+              const data = await response.json();
+              console.log(data)
+              console.log("here2")
+              if (response.status !== 200) {
+                throw data.error || new Error(`Request failed with status ${response.status}`);
+              }
+              setResult(data.message);
+              }
+              else
+              {
+                console.error('Reader result is null');
+              }
+            }
+          } catch (error) {
+            if (error instanceof Error) {
+              console.error(error);
+              alert(error.message);
+            } else {
+              console.error(error);
+            }
+          }
+        };
+        setMediaRecorder(newMediaRecorder);
+      })
+      .catch(err => console.error('Error accessing microphone:', err));
+  }
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -226,7 +294,7 @@ export default function Video() {
       // The event object contains the data sent by the server
       const eventData = JSON.parse(event.data);
       llmAnswer += eventData;
-      console.log("Received event:", eventData);
+      //console.log("Received event:", eventData);
 
       // You can update your UI or perform other actions based on the received data
     };
@@ -277,7 +345,23 @@ export default function Video() {
     }
   }
 
-  console.log(intervals);
+  const startRecording = () => {
+    if (mediaRecorder) {
+        console.log("I am on");
+      mediaRecorder.start();
+      setRecording(true);
+    }
+  };
+  // Function to stop recording
+  const stopRecording = () => {
+    if (mediaRecorder) {
+        console.log("I am off");
+      mediaRecorder.stop();
+      setRecording(false);
+    }
+  };
+
+  //console.log(intervals);
 
   return (
     <main className={styles.main}>
@@ -353,6 +437,10 @@ export default function Video() {
           }}
         ></div>
       </form>
+      <button onClick={recording ? stopRecording : startRecording} >
+          {recording ? 'Stop Recording' : 'Start Recording'}
+        </button>
+        <p>{result}</p>
     </main>
   );
 }
