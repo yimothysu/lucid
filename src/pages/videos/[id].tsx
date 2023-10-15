@@ -6,7 +6,6 @@ import { ArrowRight } from "react-feather";
 import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
 import { useRouter } from "next/router";
-
 const PROGRESS_INTERVAL_MS = 500;
 
 interface QuestionAndAnswerProps {
@@ -101,16 +100,22 @@ export default function Video() {
     return <main className={styles.main}></main>;
   }
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     if (!videoId || Array.isArray(videoId)) {
       return;
     }
+
+    const titleResp = await fetch(`/api/ytTitle?videoId=${id}`);
+    const title = await titleResp.text();
+    const cleanedTitle = title.substring(1, title.length - 1);
+
     addVideoQuestion({
       videoId: videoId,
       question,
       answer,
       timestamp: elapsedTime,
+      title: cleanedTitle,
     }).then(() => {
       setTimeStamps([
         ...timeStamps,
@@ -185,17 +190,23 @@ export default function Video() {
         <button type="submit" className={styles.questionSubmit}>
           <ArrowRight />
         </button>
+        <div
+          style={{
+            marginTop: "1rem",
+          }}
+        >
+          {timeStamps &&
+            timeStamps.map((pair, index) => {
+              return (
+                <QuestionAndAnswer
+                  key={`${index}`}
+                  question={pair.question}
+                  answer={pair.answer}
+                />
+              );
+            })}
+        </div>
       </form>
-      {timeStamps &&
-        timeStamps.map((pair, index) => {
-          return (
-            <QuestionAndAnswer
-              key={`${index}`}
-              question={pair.question}
-              answer={pair.answer}
-            />
-          );
-        })}
     </main>
   );
 }

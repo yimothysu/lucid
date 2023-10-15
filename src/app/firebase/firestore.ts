@@ -6,16 +6,10 @@ import {
   setDoc,
   collection,
   getDocs,
-  orderBy,
   limit,
   query,
 } from "firebase/firestore";
-import {
-  addVideoType,
-  GetRandomVideo,
-  QuestionAnswerPair,
-  QuestionAnswerPairs,
-} from "./types";
+import { addVideoType, GetRandomVideo, QuestionAnswerPairs } from "./types";
 
 export const db = getFirestore(app);
 
@@ -72,6 +66,7 @@ export async function addVideoQuestion(addVideoObj: addVideoType) {
     // add videoId to videos collection
     await setDoc(doc(db, "videos", addVideoObj.videoId), {
       questionAnswerPairs: [],
+      title: addVideoObj.title,
     });
   }
 
@@ -89,6 +84,7 @@ export async function addVideoQuestion(addVideoObj: addVideoType) {
       });
       setDoc(documentReference, {
         questionAnswerPairs: questionAnswerPairs,
+        title: addVideoObj.title,
       });
     })
     .catch((error) => {

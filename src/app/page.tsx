@@ -67,7 +67,7 @@ export default function Home() {
           );
           newCards.push({
             videoId: randomVideos[i].id,
-            title: "We ball",
+            title: randomVideos[i].title,
             sampleQuestion:
               randomVideos[i].questionAnswerPairs[randomIndex].question,
             sampleAnswer:
@@ -89,7 +89,13 @@ export default function Home() {
 
   return (
     <main className={styles.mainContainer}>
-      <Image src="/logo-v0.png" alt="logo" width={200} height={200} />
+      <Image
+        className={styles.floatingAnimatedImage}
+        src="/logo-v0.png"
+        alt="logo"
+        width={200}
+        height={200}
+      />
       <h1>Education reimagined, one lecture at a time.</h1>
       <div className={styles.cardsGrid}>
         {cards.map((card, index) => (

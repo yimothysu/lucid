@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-        "firebase": "^10.5.0",
-        "framer-motion": "^10.16.4",
+    "firebase": "^10.5.0",
+    "framer-motion": "^10.16.4",
     "next": "13.5.4",
     "node-fetch": "^3.3.2",
     "openai": "^4.12.1",
@@ -19,10 +19,11 @@
     "react-feather": "^2.0.10",
     "react-player": "^2.13.0",
     "react-youtube": "^10.1.0",
-    "youtube-caption-extractor": "^1.4.3"
+    "youtube-caption-extractor": "^1.4.3",
+    "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
-        "@types/node": "^20",
+    "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
