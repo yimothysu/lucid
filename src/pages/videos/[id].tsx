@@ -442,12 +442,15 @@ export default function Video() {
         </div>
         <div className={styles.currentQuestionSection}>
           {currentQuestions.length > 0 ? (
-            <>
-              <div className={styles.currentQuestion}>Current Questions</div>
+            <div className={styles.threadContainer}>
+              <div className={styles.threadTitle}>
+                Thread at {elapsedTime} seconds
+              </div>
+              <div className={styles.currentQuestion}>Students</div>
               <div className={styles.currentQuestionText}>
                 {currentQuestions.join(", ")}
               </div>
-              <div className={styles.currentAnswer}>Current Answers</div>
+              <div className={styles.currentAnswer}>AI</div>
               <div className={styles.currentAnswerText}>
                 {currentAnswers.length > 0 ? (
                   currentAnswers.join(", ")
@@ -457,8 +460,12 @@ export default function Video() {
                   <i>An error occurred while generating an answer to these questions.</i>
                 )}
               </div>
-            </>
-          ) : null}
+            </div>
+          ) : (
+            <div className={styles.starterText}>
+              Click on the progress bar to see questions and answers
+            </div>
+          )}
         </div>
 
       </div>
