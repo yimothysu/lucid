@@ -57,7 +57,7 @@ function whatToRender(intervalArray: any[], curTimeStamp: any) {
   for (let i = 0; i < intervalArray.length; i++) {
     if (
       curTimeStamp >= intervalArray[i].start - 30 &&
-      curTimeStamp <= intervalArray[i].end
+      curTimeStamp <= intervalArray[i].end + 10
     ) {
       if (startIndex === -1) {
         startIndex = i;
