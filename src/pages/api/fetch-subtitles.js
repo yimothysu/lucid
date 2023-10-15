@@ -2,7 +2,7 @@ import { getSubtitles, getVideoDetails } from 'youtube-caption-extractor';
 
 export default async function handler(req, res) {
     const { videoID } = req.query;
-  const lang = 'en'; // Optional, default is 'en' (English)
+    const lang = 'en'; // Optional, default is 'en' (English)
 
   try {
     const subtitles = await getSubtitles({ videoID, lang }); // call this if you only need the subtitles
