@@ -11,5 +11,6 @@
     "generatingError": "Ocorreu um erro ao gerar uma resposta para esta pergunta.",
     "generatingProgress": "Clique na barra de progresso para ver perguntas e respostas",
     "geneartingAsk": "Faça uma pergunta",
-    "generatedMuted": "Mudo. Pressione o botão do microfone para começar a gravar."
+    "generatedMuted": "Mudo. Pressione o botão do microfone para começar a gravar.",
+    "placeholderQuestion": "Pergunta"
 }

@@ -11,5 +11,6 @@
     "generatingError": "Bu soruya bir yanıt oluştururken bir hata oluştu.",
     "generatingProgress": "Soruları ve cevapları görmek için ilerleme çubuğuna tıklayın",
     "geneartingAsk": "Bir Soru Sor",
-    "generatedMuted": "Sessiz. Kayıt yapmaya başlamak için mikrofon düğmesine basın."
+    "generatedMuted": "Sessiz. Kayıt yapmaya başlamak için mikrofon düğmesine basın.",
+    "placeholderQuestion": "Soru"
 }

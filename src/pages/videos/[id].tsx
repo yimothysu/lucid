@@ -343,31 +343,32 @@ export default function Video() {
     return <main className={styles.main}></main>;
   }
 
-
   const fetchAudioData = async (text: string) => {
     try {
       const response = await fetch(`/api/give-audio?text=${text}`);
-    
+
       if (response.ok) {
         const chunksAnswer = await response.arrayBuffer();
-        const audioBlobCur = new Blob([chunksAnswer], { type: 'audio/mp3' });
+        const audioBlobCur = new Blob([chunksAnswer], { type: "audio/mp3" });
         const audioUrlCur = URL.createObjectURL(audioBlobCur);
         const audioCur = new Audio(audioUrlCur);
-  
+
         audioCur.onerror = function (err) {
           console.error("Error playing audio:", err);
         };
-        
+
         audioCur.play();
       } else {
-        console.error('Failed to fetch audio:', response.status, response.statusText);
+        console.error(
+          "Failed to fetch audio:",
+          response.status,
+          response.statusText
+        );
       }
     } catch (error) {
       console.error("An error occurred:", error);
     }
   };
-
-
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -403,7 +404,11 @@ export default function Video() {
         });
         setSubmitting(false);
         setQuestion("");
-        fetchAudioData(localCurrentAnswer).then(() => {console.log("here")}).catch((e)=>console.log(e));
+        fetchAudioData(localCurrentAnswer)
+          .then(() => {
+            console.log("here");
+          })
+          .catch((e) => console.log(e));
 
         es.close();
       } else {
@@ -548,7 +553,7 @@ export default function Video() {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           className={styles.questionInput}
-          placeholder="Question"
+          placeholder={t("placeholderQuestion")}
         />
 
         <div className={styles.buttonContainer}>
