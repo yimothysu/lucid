@@ -40,6 +40,40 @@ interface Timestamp {
   answer: string;
 }
 
+const Spinner = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="10" stroke-dasharray="63" stroke-dashoffset="21">
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 12 12"
+        to="360 12 12"
+        dur="1.5s"
+        repeatCount="indefinite"
+      />
+      <animate
+        attributeName="stroke-dashoffset"
+        dur="8s"
+        repeatCount="indefinite"
+        keyTimes="0; 0.5; 1"
+        values="-16; -47; -16"
+        calcMode="spline"
+        keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+      />
+    </circle>
+  </svg>
+);
+
 function ProgressBar(props: ProgressBarProps) {
   return (
     <div
@@ -78,6 +112,7 @@ export default function Video() {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [question, setQuestion] = useState<string>("");
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
@@ -107,6 +142,7 @@ export default function Video() {
       return;
     }
 
+    setSubmitting(true);
     let llmAnswer = "";
     const es = await callGenerateText(question);
     es.onmessage = (event) => {
@@ -122,6 +158,10 @@ export default function Video() {
             { timestamp: elapsedTime, question, answer: llmAnswer },
           ]);
         });
+        setSubmitting(false);
+        setQuestion("");
+        setCurrentQuestion(question);
+        setCurrentAnswer(llmAnswer);
 
         es.close();
         return;
@@ -204,7 +244,7 @@ export default function Video() {
           placeholder="Question"
         />
         <button type="submit" className={styles.questionSubmit}>
-          <ArrowRight />
+          {submitting ? <Spinner /> : <ArrowRight />}
         </button>
       </form>
       {timeStamps &&
