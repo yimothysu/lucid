@@ -1,9 +1,11 @@
 import Image from "next/image";
 import styles from "./style.module.css";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
-
-export default function Navbar(props: { hideTryNow?: boolean }) {
+import { useTranslation } from "next-i18next";
+export default function Navbar(props: {
+  actionUrl?: string;
+  actionTitle?: string;
+}) {
   const { t } = useTranslation();
   return (
     <div className={styles.navbar}>
@@ -11,9 +13,9 @@ export default function Navbar(props: { hideTryNow?: boolean }) {
         <Image src="/logo-v0.png" alt="logo" width={80} height={80} />
         Lucid
       </a>
-      {!props.hideTryNow && (
+      {props.actionUrl && (
         <div className={styles.navbar__links}>
-          <Link href="/retrieve">{t("navBarButton")}</Link>
+          <Link href={props.actionUrl}>{props.actionTitle}</Link>
         </div>
       )}
     </div>

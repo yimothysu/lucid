@@ -36,6 +36,7 @@ const PROGRESS_INTERVAL_MS = 500;
 
 const augmentPrompt = (context: string, title: string, question: string) => {
   return `
+  Please answer the question.
   I am a university student studying a lecture video.
   I have included the video title and partial transcript for context.
   Please answer my question succinctly.
@@ -45,9 +46,14 @@ const augmentPrompt = (context: string, title: string, question: string) => {
   ---
   Transcript:
   ${context}
+
   ---
   Question:
   ${question}
+
+  ---
+  Instructions:
+  Please answer the question.
   `;
 };
 
@@ -407,7 +413,7 @@ export default function Video() {
 
   return (
     <main className={styles.main}>
-      <Navbar hideTryNow={true} />
+      <Navbar actionTitle="New Lecture" actionUrl="/retrieve" />
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
           <ReactPlayer
@@ -437,12 +443,15 @@ export default function Video() {
         </div>
         <div className={styles.currentQuestionSection}>
           {currentQuestion ? (
-            <>
-              <div className={styles.currentQuestion}>Current Question</div>
+            <div className={styles.threadContainer}>
+              <div className={styles.threadTitle}>
+                Thread at {elapsedTime} seconds
+              </div>
+              <div className={styles.currentQuestion}>Student</div>
               <div className={styles.currentQuestionText}>
                 {currentQuestion}
               </div>
-              <div className={styles.currentAnswer}>Current Answer</div>
+              <div className={styles.currentAnswer}>AI</div>
               <div className={styles.currentAnswerText}>
                 {currentAnswer ? (
                   currentAnswer
@@ -452,7 +461,7 @@ export default function Video() {
                   <i>{t("generatingError")}</i>
                 )}
               </div>
-            </>
+            </div>
           ) : (
             <div>{t("generatingProgress")}</div>
           )}
