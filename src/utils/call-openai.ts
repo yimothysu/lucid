@@ -37,7 +37,7 @@ export async function callDALLE(prompt: string) {
   const response = await openai.images.generate({
     prompt: prompt,
     n: 1,
-    size: "256x256",
+    size: "1024x1024",
   });
   console.log("Image URL: ", response.data[0].url)
   return response.data[0].url;
