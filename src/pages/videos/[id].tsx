@@ -108,11 +108,11 @@ const Spinner = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
   >
-    <circle cx="12" cy="12" r="10" stroke-dasharray="63" stroke-dashoffset="21">
+    <circle cx="12" cy="12" r="10" strokeDasharray="63" strokeDashoffset="21">
       <animateTransform
         attributeName="transform"
         type="rotate"
@@ -299,6 +299,8 @@ export default function Video() {
       return;
     }
 
+    // Use local variable to prevent race condition
+    let localCurrentAnswer = "";
     setSubmitting(true);
     setCurrentQuestion(question);
     const context = filterSubtitles(subtitles, intervals, elapsedTime);
@@ -312,13 +314,13 @@ export default function Video() {
         addVideoQuestion({
           videoId: videoId,
           question,
-          answer: currentAnswer,
+          answer: localCurrentAnswer,
           timestamp: elapsedTime,
           title: cleanedTitle,
         }).then(() => {
           setTimeStamps([
             ...timeStamps,
-            { timestamp: elapsedTime, question, answer: currentAnswer },
+            { timestamp: elapsedTime, question, answer: localCurrentAnswer },
           ]);
         });
         setSubmitting(false);
@@ -326,6 +328,7 @@ export default function Video() {
 
         es.close();
       } else {
+        localCurrentAnswer += event.data;
         setCurrentAnswer((prevText) => `${prevText}${event.data}`);
       }
     };
