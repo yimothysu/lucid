@@ -22,6 +22,54 @@ export default function Footer() {
       countryCode: "in",
       link: "in",
     },
+    {
+      countryCode: "cn",
+      link: "zh",
+    },
+    {
+      countryCode: "ar",
+      link: "ar",
+    },
+    {
+      countryCode: "ru",
+      link: "ru",
+    },
+    {
+      countryCode: "pt",
+      link: "pt",
+    },
+    {
+      countryCode: "jp",
+      link: "ja",
+    },
+    {
+      countryCode: "it",
+      link: "it",
+    },
+    {
+      countryCode: "nl",
+      link: "nl",
+    },
+    {
+      countryCode: "kr",
+      link: "ko",
+    },
+    {
+      countryCode: "tr",
+      link: "tr",
+    },
+    {
+      countryCode: "bn",
+      link: "bn",
+    },
+    {
+      countryCode: "uy",
+      link: "ur",
+    },
+    {
+      countryCode: "id",
+      link: "id",
+    },
   ];
 
   return (
@@ -33,6 +81,7 @@ export default function Footer() {
         alignContent: "center",
         justifyContent: "center",
         gap: "1em",
+        flexWrap: "wrap",
       }}
     >
       {countries.map((item, index) => {

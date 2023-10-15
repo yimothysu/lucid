@@ -1,0 +1,15 @@
+{
+    "title": "إعادة تصور التعليم، محاضرة واحدة في كل مرة.",
+    "tryButton": "جربه الآن",
+    "navBarButton": "جربه الآن",
+    "navBarButtonView": "عرض المحاضرة الحالية",
+    "navBarButtonNew": "محاضرة جديدة",
+
+    "retrieveText": "الصق رابط YouTube هنا",
+
+    "generatingText": "جاري التوليد...",
+    "generatingError": "حدث خطأ أثناء توليد إجابة لهذا السؤال.",
+    "generatingProgress": "انقر على شريط التقدم لرؤية الأسئلة والأجوبة",
+    "geneartingAsk": "طرح سؤال",
+    "generatedMuted": "مكتوم الصوت. اضغط على زر الميكروفون لبدء التسجيل."
+}

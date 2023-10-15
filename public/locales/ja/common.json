@@ -1,0 +1,15 @@
+{
+    "title": "教育を一度に一つの講義で再想像。",
+    "tryButton": "今すぐ試す",
+    "navBarButton": "今すぐ試す",
+    "navBarButtonView": "現在の講義を見る",
+    "navBarButtonNew": "新しい講義",
+
+    "retrieveText": "ここにYouTubeのリンクを貼り付け",
+
+    "generatingText": "生成中...",
+    "generatingError": "この質問に対する回答を生成する際にエラーが発生しました。",
+    "generatingProgress": "進行状況バーをクリックして質問と回答を見る",
+    "geneartingAsk": "質問する",
+    "generatedMuted": "ミュート。マイクボタンを押して録音を開始してください。"
+}

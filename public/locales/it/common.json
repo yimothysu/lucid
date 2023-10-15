@@ -1,0 +1,15 @@
+{
+    "title": "Istruzione reinventata, una lezione alla volta.",
+    "tryButton": "Provalo ora",
+    "navBarButton": "Provalo ora",
+    "navBarButtonView": "Visualizza la lezione corrente",
+    "navBarButtonNew": "Nuova Lezione",
+
+    "retrieveText": "Incolla qui il link di YouTube",
+
+    "generatingText": "Generando...",
+    "generatingError": "Si è verificato un errore durante la generazione della risposta a questa domanda.",
+    "generatingProgress": "Clicca sulla barra di avanzamento per vedere domande e risposte",
+    "geneartingAsk": "Fai una domanda",
+    "generatedMuted": "Muto. Premere il pulsante del microfono per iniziare la registrazione."
+}
