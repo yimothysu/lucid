@@ -115,3 +115,7 @@
 .showQuestions:hover {
   background-color: #94e0ad;
 }
+
+.info-box{
+    width: 100%;
+}

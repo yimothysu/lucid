@@ -40,6 +40,35 @@ interface Timestamp {
   answer: string;
 }
 
+type subItem = {
+  start: string;
+  dur: string;
+  text: string;
+};
+
+type subItems = {
+  subtitles: subItem[];
+};
+
+function whatToRender(intervalArray: any[], curTimeStamp: any) {
+  let startIndex = -1;
+  let endIndex = -1;
+
+  for (let i = 0; i < intervalArray.length; i++) {
+    if (
+      curTimeStamp >= intervalArray[i].start - 30 &&
+      curTimeStamp <= intervalArray[i].end
+    ) {
+      if (startIndex === -1) {
+        startIndex = i;
+      }
+      endIndex = i;
+    }
+  }
+
+  return [startIndex, endIndex];
+}
+
 const Spinner = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -119,6 +148,8 @@ export default function Video() {
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
+  const [subtitles, setSubtitles] = useState<subItems>();
+
   const router = useRouter();
   const { id } = router.query;
   const videoId = id;
@@ -135,6 +166,25 @@ export default function Video() {
   if (!videoId) {
     return <main className={styles.main}></main>;
   }
+
+  const lang = "en";
+
+  const fetchSubtitles = async (videoID = id) => {
+    try {
+      const response = await fetch(
+        `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
+      );
+      console.log("Here!");
+      const data = await response.json();
+      console.log(data);
+
+      setSubtitles(data);
+    } catch (error) {
+      console.error("Error fetching subtitles:", error);
+    }
+  };
+
+  fetchSubtitles();
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -203,6 +253,29 @@ export default function Video() {
     player.seekTo(time);
   };
 
+  type Interval = {
+    start: number;
+    end: number;
+  };
+
+  const intervals: Interval[] = [];
+  if (subtitles) {
+    if (Array.isArray(subtitles.subtitles)) {
+      const intervalSize = 15; // Number of subtitles per interval
+
+      for (let i = 0; i <= subtitles.subtitles.length - intervalSize; i++) {
+        const start = i === 0 ? 0 : parseFloat(subtitles.subtitles[i].start);
+        const end = parseFloat(subtitles.subtitles[i + intervalSize - 1].start);
+        const interval = { start, end };
+        intervals.push(interval);
+      }
+    } else {
+      console.log("zoom");
+    }
+  }
+
+  console.log(intervals);
+
   return (
     <main className={styles.main}>
       <div className={styles.topPart}>
@@ -221,6 +294,25 @@ export default function Video() {
             setProgress={setProgress}
             timeStampItems={timeStamps}
           />
+          <div className="info-box">
+            <input
+              type="text"
+              value={subtitles?.subtitles
+                .filter((subtitle, index) => {
+                  const [startIndex, endIndex] = whatToRender(
+                    intervals,
+                    elapsedTime
+                  );
+                  return index >= startIndex && index <= endIndex;
+                })
+                .map((subtitle) => subtitle.text.replace(/\[.*\]/g, ""))
+                .join(" ")}
+              readOnly
+              style={{
+                width: "100%",
+              }}
+            />
+          </div>
         </div>
         <div className={styles.currentQuestionSection}>
           {currentQuestion && currentAnswer ? (
