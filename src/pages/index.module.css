@@ -70,11 +70,14 @@
   margin-bottom: 3rem;
   border: none;
   cursor: pointer;
+  gap: 0rem;
 }
 
 .actionButton:hover {
   background-color: #98eecc;
-  transition: background-color 0.2s ease-in-out;
+  gap: 1.5rem;
+  padding: 0.75rem 0.75rem;
+  transition: all 0.2s ease-in-out;
 }
 
 .actionButton__span {

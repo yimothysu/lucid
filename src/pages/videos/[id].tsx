@@ -90,6 +90,7 @@ interface Timestamp {
   timestamp: number;
   question: string;
   answer: string;
+  userTime: number;
 }
 
 type subItem = {
@@ -195,8 +196,8 @@ export default function Video() {
   const [question, setQuestion] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const [currentQuestion, setCurrentQuestion] = useState<string>("");
-  const [currentAnswer, setCurrentAnswer] = useState<string>("");
+  const [currentQuestions, setCurrentQuestions] = useState<string[]>([]);
+  const [currentAnswers, setCurrentAnswers] = useState<string[]>([]);
 
   const [timeStamps, setTimeStamps] = useState<Timestamp[]>([]);
 
@@ -323,11 +324,10 @@ export default function Video() {
       return;
     }
 
-    // Use local variable to prevent race condition
     let localCurrentAnswer = "";
     setSubmitting(true);
-    setCurrentQuestion(question);
-    setCurrentAnswer("");
+    setCurrentQuestions((prevQuestions) => [...prevQuestions, question]);
+    setCurrentAnswers((prevAnswers) => [...prevAnswers, ""]);
     const context = filterSubtitles(subtitles, intervals, elapsedTime);
     const title = await fetchTitle(videoId);
     const es = await callGenerateText(augmentPrompt(context, title, question));
@@ -342,16 +342,24 @@ export default function Video() {
         }).then(() => {
           setTimeStamps([
             ...timeStamps,
-            { timestamp: elapsedTime, question, answer: localCurrentAnswer },
+            {
+              timestamp: elapsedTime,
+              question,
+              answer: localCurrentAnswer,
+              userTime: Date.now(),
+            },
           ]);
         });
         setSubmitting(false);
         setQuestion("");
-
         es.close();
       } else {
         localCurrentAnswer += event.data;
-        setCurrentAnswer(localCurrentAnswer);
+        setCurrentAnswers((prevAnswers) => {
+          const newAnswers = [...prevAnswers];
+          newAnswers[newAnswers.length - 1] = localCurrentAnswer;
+          return newAnswers;
+        });
       }
     };
   };
@@ -365,11 +373,26 @@ export default function Video() {
     setElapsedTime(Math.floor(progress.playedSeconds));
   };
 
-  const onTimestampClick = (timestamp: Timestamp) => {
-    setCurrentQuestion(timestamp.question);
-    setCurrentAnswer(timestamp.answer);
-    setElapsedTime(timestamp.timestamp);
-    setProgress(timestamp.timestamp);
+  const onTimestampClick = (clickedTimestamp: Timestamp) => {
+    const matchingTimestamps = timeStamps.filter(
+      (timestamp) => timestamp.timestamp === clickedTimestamp.timestamp
+    );
+
+    // Sort the timestamps
+    matchingTimestamps.sort((a, b) => {
+      const timeA = a.userTime !== undefined ? a.userTime : a.timestamp;
+      const timeB = b.userTime !== undefined ? b.userTime : b.timestamp;
+
+      return timeA - timeB;
+    });
+
+    const questions = matchingTimestamps.map((timestamp) => timestamp.question);
+    const answers = matchingTimestamps.map((timestamp) => timestamp.answer);
+
+    setCurrentQuestions(questions);
+    setCurrentAnswers(answers);
+    setElapsedTime(clickedTimestamp.timestamp);
+    setProgress(clickedTimestamp.timestamp);
   };
 
   const setProgress = (time: number) => {
@@ -442,19 +465,19 @@ export default function Video() {
           </div>
         </div>
         <div className={styles.currentQuestionSection}>
-          {currentQuestion ? (
+          {currentQuestions.length > 0 ? (
             <div className={styles.threadContainer}>
               <div className={styles.threadTitle}>
                 Thread at {elapsedTime} seconds
               </div>
-              <div className={styles.currentQuestion}>Student</div>
+              <div className={styles.currentQuestion}>Students</div>
               <div className={styles.currentQuestionText}>
-                {currentQuestion}
+                {currentQuestions.join(", ")}
               </div>
               <div className={styles.currentAnswer}>AI</div>
               <div className={styles.currentAnswerText}>
-                {currentAnswer ? (
-                  currentAnswer
+                {currentAnswers.length > 0 ? (
+                  currentAnswers.join(", ")
                 ) : submitting ? (
                   <i>{t("generatingText")}</i>
                 ) : (
@@ -463,7 +486,7 @@ export default function Video() {
               </div>
             </div>
           ) : (
-            <div>{t("generatingProgress")}</div>
+            <div className={styles.starterText}>{t("generatingProgress")}</div>
           )}
         </div>
       </div>

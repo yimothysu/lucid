@@ -10,6 +10,7 @@ export type QuestionAnswerPair = {
   question: string;
   answer: string;
   timestamp: number;
+  userTime: number;
 };
 
 export type QuestionAnswerPairs = {
