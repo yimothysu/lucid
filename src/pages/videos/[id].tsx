@@ -7,6 +7,7 @@ import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
 import { useRouter } from "next/router";
 import { callGenerateText } from "@/utils/api";
+import Navbar from "@/app/components/navbar";
 
 const PROGRESS_INTERVAL_MS = 500;
 
@@ -247,6 +248,8 @@ export default function Video() {
   const onTimestampClick = (timestamp: Timestamp) => {
     setCurrentQuestion(timestamp.question);
     setCurrentAnswer(timestamp.answer);
+    setElapsedTime(timestamp.timestamp);
+    setProgress(timestamp.timestamp);
   };
 
   const setProgress = (time: number) => {
@@ -278,6 +281,7 @@ export default function Video() {
 
   return (
     <main className={styles.main}>
+      <Navbar />
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
           <ReactPlayer
@@ -309,7 +313,7 @@ export default function Video() {
               readOnly
               style={{
                 width: "100%",
-                height: "100px"
+                height: "100px",
               }}
             />
           </div>
