@@ -34,6 +34,31 @@ export async function getStaticPaths() {
 
 const PROGRESS_INTERVAL_MS = 500;
 
+function QuestionAnswerPair(props: {
+  question: string;
+  answer?: string;
+  submitting: boolean;
+}) {
+  return (
+    <div className={styles.questionAnswerPair}>
+      <div className={styles.currentQuestion}>Student</div>
+      <div className={styles.currentQuestionText}>{props.question}</div>
+      <div className={styles.currentAnswer}>AI</div>
+      <div className={styles.currentAnswerText}>
+        {props.answer ? (
+          props.answer
+        ) : props.submitting ? (
+          <i>Generating...</i>
+        ) : (
+          <i>
+            An error occurred while generating an answer to these questions.
+          </i>
+        )}
+      </div>
+    </div>
+  );
+}
+
 const augmentPrompt = (context: string, title: string, question: string) => {
   return `
   Please answer the question.
@@ -318,6 +343,32 @@ export default function Video() {
     return <main className={styles.main}></main>;
   }
 
+
+  const fetchAudioData = async (text: string) => {
+    try {
+      const response = await fetch(`/api/give-audio?text=${text}`);
+    
+      if (response.ok) {
+        const chunksAnswer = await response.arrayBuffer();
+        const audioBlobCur = new Blob([chunksAnswer], { type: 'audio/mp3' });
+        const audioUrlCur = URL.createObjectURL(audioBlobCur);
+        const audioCur = new Audio(audioUrlCur);
+  
+        audioCur.onerror = function (err) {
+          console.error("Error playing audio:", err);
+        };
+        
+        audioCur.play();
+      } else {
+        console.error('Failed to fetch audio:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+
+
+
   const onSubmit = async (e: any) => {
     e.preventDefault();
     if (!videoId || Array.isArray(videoId)) {
@@ -352,6 +403,8 @@ export default function Video() {
         });
         setSubmitting(false);
         setQuestion("");
+        fetchAudioData(localCurrentAnswer).then(() => {console.log("here")}).catch((e)=>console.log(e));
+
         es.close();
       } else {
         localCurrentAnswer += event.data;
@@ -470,19 +523,15 @@ export default function Video() {
               <div className={styles.threadTitle}>
                 Thread at {elapsedTime} seconds
               </div>
-              <div className={styles.currentQuestion}>Students</div>
-              <div className={styles.currentQuestionText}>
-                {currentQuestions.join(", ")}
-              </div>
-              <div className={styles.currentAnswer}>AI</div>
-              <div className={styles.currentAnswerText}>
-                {currentAnswers.length > 0 ? (
-                  currentAnswers.join(", ")
-                ) : submitting ? (
-                  <i>{t("generatingText")}</i>
-                ) : (
-                  <i>{t("generatingError")}</i>
-                )}
+              <div className={styles.questionsSection}>
+                {currentQuestions.map((_, i) => (
+                  <QuestionAnswerPair
+                    key={i}
+                    question={currentQuestions[i]}
+                    answer={currentAnswers[i]}
+                    submitting={submitting}
+                  />
+                ))}
               </div>
             </div>
           ) : (
