@@ -5,7 +5,7 @@ import styles from "./video.module.css";
 import { ArrowRight, Mic, MicOff } from "react-feather";
 import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { callGenerateText } from "@/utils/api";
 import Navbar from "@/app/components/navbar";
 // @ts-ignore

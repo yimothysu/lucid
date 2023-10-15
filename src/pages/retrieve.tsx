@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import theme from "@/app/styles/theme";
 import { ArrowRight } from "react-feather";
