@@ -81,6 +81,7 @@ export async function addVideoQuestion(addVideoObj: addVideoType) {
         question: addVideoObj.question,
         answer: addVideoObj.answer,
         timestamp: addVideoObj.timestamp,
+        userTime: Math.floor(Date.now()),
       });
       setDoc(documentReference, {
         questionAnswerPairs: questionAnswerPairs,
