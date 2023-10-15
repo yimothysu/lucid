@@ -10,33 +10,74 @@ import { callGenerateText } from "@/utils/api";
 import Navbar from "@/app/components/navbar";
 // @ts-ignore
 import { LiveAudioVisualizer } from "react-audio-visualize";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+export async function getStaticProps(context: { locale: any }) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: true,
+  };
+}
 
 const PROGRESS_INTERVAL_MS = 500;
 
-const augmentPrompt = (context: string, title: string, question: string, prevQuestions: string[], prevAnswers: string[]) => {
-  let previousQA = "";
-  for (let i = 0; i < prevQuestions.length; i++) {
-    previousQA += `
-    question ${i + 1}: ${prevQuestions[i]}
-    answer ${i + 1}: ${prevAnswers[i]}
-    `;
-  }
+function QuestionAnswerPair(props: {
+  question: string;
+  answer?: string;
+  submitting: boolean;
+}) {
+  return (
+    <div className={styles.questionAnswerPair}>
+      <div className={styles.currentQuestion}>Student</div>
+      <div className={styles.currentQuestionText}>{props.question}</div>
+      <div className={styles.currentAnswer}>AI</div>
+      <div className={styles.currentAnswerText}>
+        {props.answer ? (
+          props.answer
+        ) : props.submitting ? (
+          <i>Generating...</i>
+        ) : (
+          <i>
+            An error occurred while generating an answer to these questions.
+          </i>
+        )}
+      </div>
+    </div>
+  );
+}
 
+const augmentPrompt = (context: string, title: string, question: string, currentQuestions: string[], currentAnswers: string[]) => {
+  // Code to concatenate or format currentQuestions and currentAnswers into a single string, previousQA
+  const previousQA = currentQuestions.map((q, index) => `Q: ${q}\nA: ${currentAnswers[index] || 'Pending'}`).join('\n');
+  
   return `
-  I am a university student studying a lecture video titled ${title}. 
-  I have included the video title and partial transcript for context on what I read.
-  ---
-  Transcript:
-  ${context}
-  ---
-  Here is my previous conversation with my professor.
-  ${previousQA}
-  ---
-  Please answer my following question.
-  Question:
-  ${question}
-  ---
-  Answer:
+    I am a university student studying a lecture video titled ${title}. 
+    I have included the video title and partial transcript for context on what I read.
+    ---
+    Transcript:
+    ${context}
+    ---
+    Here is my previous conversation with my professor.
+    ${previousQA}
+    ---
+    Please answer my following question.
+    Question:
+    ${question}
+    ---
+    Answer:
   `;
 };
 
@@ -203,6 +244,7 @@ export default function Video() {
   const router = useRouter();
   const { id } = router.query;
   const videoId = id;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -268,6 +310,27 @@ export default function Video() {
     }
   }, []);
 
+  const lang = "en";
+
+  useEffect(() => {
+    const fetchSubtitles = async (videoID = id) => {
+      try {
+        const response = await fetch(
+          `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
+        );
+        //console.log("Here!");
+        const data = await response.json();
+        //console.log(data);
+
+        setSubtitles(data);
+      } catch (error) {
+        console.error("Error fetching subtitles:", error);
+      }
+    };
+
+    fetchSubtitles();
+  }, [id, lang]);
+
   useEffect(() => {
     if (!videoId || Array.isArray(videoId)) {
       return;
@@ -285,29 +348,38 @@ export default function Video() {
     return <main className={styles.main}></main>;
   }
 
-  const lang = "en";
 
-  const fetchSubtitles = async (videoID = id) => {
+  const fetchAudioData = async (text: string) => {
     try {
-      const response = await fetch(
-        `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
-      );
-      const data = await response.json();
-
-      setSubtitles(data);
+      const response = await fetch(`/api/give-audio?text=${text}`);
+    
+      if (response.ok) {
+        const chunksAnswer = await response.arrayBuffer();
+        const audioBlobCur = new Blob([chunksAnswer], { type: 'audio/mp3' });
+        const audioUrlCur = URL.createObjectURL(audioBlobCur);
+        const audioCur = new Audio(audioUrlCur);
+  
+        audioCur.onerror = function (err) {
+          console.error("Error playing audio:", err);
+        };
+        
+        audioCur.play();
+      } else {
+        console.error('Failed to fetch audio:', response.status, response.statusText);
+      }
     } catch (error) {
-      console.error("Error fetching subtitles:", error);
+      console.error("An error occurred:", error);
     }
   };
 
-  fetchSubtitles();
+
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
     if (!videoId || Array.isArray(videoId)) {
       return;
     }
-  
+
     let localCurrentAnswer = "";
     setSubmitting(true);
 
@@ -338,12 +410,19 @@ export default function Video() {
         }).then(() => {
           setTimeStamps([
             ...timeStamps,
-            { timestamp: elapsedTime, question, answer: localCurrentAnswer, userTime: Date.now()},
+            {
+              timestamp: elapsedTime,
+              question,
+              answer: localCurrentAnswer,
+              userTime: Date.now(),
+            },
           ]);
           setLastActiveTimestamp(elapsedTime);  // Update last active timestamp here
         });
         setSubmitting(false);
         setQuestion("");
+        fetchAudioData(localCurrentAnswer).then(() => {console.log("here")}).catch((e)=>console.log(e));
+
         es.close();
       } else {
         localCurrentAnswer += event.data;
@@ -355,7 +434,6 @@ export default function Video() {
       }
     };
   };
-  
 
   const onReady = (player: any) => {
     setDuration(player.getDuration());
@@ -370,26 +448,23 @@ export default function Video() {
     const matchingTimestamps = timeStamps.filter(
       (timestamp) => timestamp.timestamp === clickedTimestamp.timestamp
     );
-  
+
     // Sort the timestamps
     matchingTimestamps.sort((a, b) => {
       const timeA = a.userTime !== undefined ? a.userTime : a.timestamp;
       const timeB = b.userTime !== undefined ? b.userTime : b.timestamp;
-  
+
       return timeA - timeB;
     });
-  
+
     const questions = matchingTimestamps.map((timestamp) => timestamp.question);
     const answers = matchingTimestamps.map((timestamp) => timestamp.answer);
-  
+
     setCurrentQuestions(questions);
     setCurrentAnswers(answers);
     setElapsedTime(clickedTimestamp.timestamp);
     setLastActiveTimestamp(clickedTimestamp.timestamp);
   };
-
-  
-  
 
   const setProgress = (time: number) => {
     player.seekTo(time);
@@ -430,11 +505,9 @@ export default function Video() {
     }
   }
 
-  //console.log(intervals);
-
   return (
     <main className={styles.main}>
-      <Navbar actionTitle="New Lecture" actionUrl="/retrieve" />
+      <Navbar actionTitle={t("navBarButtonNew")} actionUrl="/retrieve" />
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
           <ReactPlayer
@@ -468,32 +541,25 @@ export default function Video() {
               <div className={styles.threadTitle}>
                 Thread at {elapsedTime} seconds
               </div>
-              <div className={styles.currentQuestion}>Students</div>
-              <div className={styles.currentQuestionText}>
-                {currentQuestions.join(", ")}
-              </div>
-              <div className={styles.currentAnswer}>AI</div>
-              <div className={styles.currentAnswerText}>
-                {currentAnswers.length > 0 ? (
-                  currentAnswers.join(", ")
-                ) : submitting ? (
-                  <i>Generating...</i>
-                ) : (
-                  <i>An error occurred while generating an answer to these questions.</i>
-                )}
+              <div className={styles.questionsSection}>
+                {currentQuestions.map((_, i) => (
+                  <QuestionAnswerPair
+                    key={i}
+                    question={currentQuestions[i]}
+                    answer={currentAnswers[i]}
+                    submitting={submitting}
+                  />
+                ))}
               </div>
             </div>
           ) : (
-            <div className={styles.starterText}>
-              Click on the progress bar to see questions and answers
-            </div>
+            <div className={styles.starterText}>{t("generatingProgress")}</div>
           )}
         </div>
-
       </div>
       <div className={styles.questionForm} onSubmit={onSubmit}>
         <label htmlFor="question" className={styles.questionLabel}>
-          Ask a Question
+          {t("geneartingAsk")}
         </label>
         <textarea
           id="question"
@@ -521,9 +587,7 @@ export default function Video() {
                 height={35}
               />
             ) : (
-              <span>
-                Muted. Press the microphone button to start recording.
-              </span>
+              <span>{t("generatedMuted")}</span>
             )}
           </div>
         </div>

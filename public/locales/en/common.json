@@ -1,0 +1,16 @@
+{
+    "title": "Education reimagined, one lecture at a time.",
+    "tryButton": "Try it Now",
+    "navBarButton": "Try Now",
+    "navBarButtonView": "View Current Lecture",
+    "navBarButtonNew": "New Lecture",
+
+    "retrieveText": "Paste YouTube Link Here",
+
+    "generatingText": "Generating...",
+    "generatingError": " An error occurred while generating an answer to this question.",
+    "generatingProgress": "Click on the progress bar to see questions and answers",
+    "geneartingAsk": "Ask a Question",
+    "generatedMuted": "Muted. Press the microphone button to start recording."
+
+}

@@ -1,0 +1,15 @@
+{
+    "title": "Eğitim, bir dersle yeniden tasarlandı.",
+    "tryButton": "Şimdi Dene",
+    "navBarButton": "Şimdi Dene",
+    "navBarButtonView": "Mevcut Dersi Görüntüle",
+    "navBarButtonNew": "Yeni Ders",
+
+    "retrieveText": "YouTube Linkini Buraya Yapıştır",
+
+    "generatingText": "Oluşturuluyor...",
+    "generatingError": "Bu soruya bir yanıt oluştururken bir hata oluştu.",
+    "generatingProgress": "Soruları ve cevapları görmek için ilerleme çubuğuna tıklayın",
+    "geneartingAsk": "Bir Soru Sor",
+    "generatedMuted": "Sessiz. Kayıt yapmaya başlamak için mikrofon düğmesine basın."
+}
