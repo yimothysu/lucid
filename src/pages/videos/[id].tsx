@@ -422,14 +422,23 @@ export default function Video() {
           </div>
         </div>
         <div className={styles.currentQuestionSection}>
-          {currentQuestion && currentAnswer ? (
+          {currentQuestion ? (
             <>
               <div className={styles.currentQuestion}>Current Question</div>
               <div className={styles.currentQuestionText}>
                 {currentQuestion}
               </div>
               <div className={styles.currentAnswer}>Current Answer</div>
-              <div className={styles.currentAnswerText}>{currentAnswer}</div>
+              <div className={styles.currentAnswerText}>
+                {currentAnswer ? (
+                  currentAnswer
+                ) : (
+                  <i>
+                    An error occurred while generating an answer to this
+                    question.
+                  </i>
+                )}
+              </div>
             </>
           ) : (
             <div>Click on the progress bar to see questions and answers</div>
