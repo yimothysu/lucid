@@ -97,6 +97,21 @@ export default function Home() {
         height={200}
       />
       <h1>Education reimagined, one lecture at a time.</h1>
+      <button
+        className={styles.actionButton}
+        onClick={() => {
+          setAnimateBackground(true);
+          setTimeout(() => {
+            router.push("/retrieve");
+          }, 200);
+        }}
+        style={{
+          marginTop: "2rem",
+        }}
+      >
+        <span className={styles.actionButton__span}>Try it Now</span>
+        <ArrowRight />
+      </button>
       <div className={styles.cardsGrid}>
         {cards.map((card, index) => (
           <a href={`/videos/${card.videoId}`} key={card.videoId}>
@@ -118,18 +133,6 @@ export default function Home() {
             : {}
         }
       ></motion.div>
-      <button
-        className={styles.actionButton}
-        onClick={() => {
-          setAnimateBackground(true);
-          setTimeout(() => {
-            router.push("/retrieve");
-          }, 200);
-        }}
-      >
-        <span className={styles.actionButton__span}>Try it Now</span>
-        <ArrowRight />
-      </button>
     </main>
   );
 }
