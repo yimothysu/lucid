@@ -1,35 +1,38 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { streamGPT3 } from '../../utils/call-openai';
+import { NextApiRequest, NextApiResponse } from "next";
+import { streamGPT3 } from "../../utils/call-openai";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'GET') {
+async function writeToStream(res: NextApiResponse, data: string) {
+  res.write(`data: ${JSON.stringify(data)}\n\n`);
+  console.log("Streaming response written to response:", data);
+  res.flushHeaders();
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === "GET") {
     const prompt = req.query.prompt as string;
 
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache, no-transform');
-    res.setHeader('Connection', 'keep-alive');
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache, no-transform");
+    res.setHeader("Connection", "keep-alive");
     res.flushHeaders();
 
-    const sendRegularData = setInterval(() => {
-      console.log("haha what am i doing here")
-    }, 1000);
-
-    req.on('close', () => {
-      clearInterval(sendRegularData);
+    req.on("close", () => {
       res.end();
     });
 
     try {
+      const promises = [];
       for await (const chunk of streamGPT3(prompt)) {
-        res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-        console.log("Streaming response written to response:", chunk);
-        res.flushHeaders();
+        promises.push(writeToStream(res, chunk || ""));
       }
-      clearInterval(sendRegularData); // Clear the interval once done
+      await Promise.all(promises);
+      await writeToStream(res, "JimSu123!");
       res.end();
     } catch (error) {
       console.error("Streaming error:", error);
-      clearInterval(sendRegularData); // Clear the interval in case of error too
       res.write(`data: {"error": "Internal Server Error"}\n\n`);
       res.end();
     }
@@ -37,5 +40,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(405).json({ error: "Method not allowed" });
     res.end();
   }
-};
-
+}
