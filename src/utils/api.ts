@@ -1,40 +1,45 @@
-import OpenAI from 'openai';
+/**
+ * callGenerateText - Function to generate text using EventSource
+ * @param {string} promptText - The prompt text to generate text from
+ * @returns {EventSource} - The EventSource object
+ */
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Function to call GPT-3 and return output
-export async function callGPT3(question: string) {
-  console.log("About to send non-streaming question: ", question)
-    const chatCompletion = await openai.chat.completions.create({
-        messages: [{ role: 'user', content: question }],
-        model: 'gpt-3.5-turbo',
+export async function callGenerateTextNonStreaming(promptText: string): Promise<Response> {
+    const response = await fetch('/api/generateText', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: promptText }),
     });
-    return chatCompletion.choices[0].message.content;
+
+    return response;
 }
 
-// Function for streaming the output.
-export async function* streamGPT3(question: string) {
-  console.log("About to send streaming question: ", question)
-    const stream = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: question }],
-        stream: true, 
+export async function callGenerateText(promptText: string) {
+    const es = new EventSource(`/api/generateText?prompt=${encodeURIComponent(promptText)}`);
+    return es;
+}
+ 
+/**
+ * callGenerateImage - Function to generate image using fetch API
+ * @param {string} prompt - The prompt text to generate image from
+ * @returns {Promise<string>} - The Promise object represents the URL of the generated image
+ */
+export async function callGenerateImage(prompt: string) {
+    const response = await fetch('/api/generateImage', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
     });
-    for await (const part of stream) {
-        yield part.choices[0]?.delta?.content;
-        console.log("I just yielded a part of the stream: ", part.choices[0]?.delta?.content)
+
+    if (!response.ok) {
+        console.error('Error occurred:', await response.text());
+        return;
     }
-}
 
-// Function to generate image using DALL-E
-export async function generateImage(prompt: string) {
-  const response = await openai.images.generate({
-    prompt: prompt,
-    n: 1,
-    size: "256x256",
-  });
-  console.log("Image URL: ", response.data[0].url)
-  return response.data[0].url;
+    const { imageUrl } = await response.json();
+    return imageUrl;
 }

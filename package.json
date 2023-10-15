@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@billogram/foundation-textbox": "^1.1.4",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.13",
     "firebase": "^10.5.0",
     "framer-motion": "^10.16.4",
     "next": "13.5.4",
@@ -20,7 +24,8 @@
     "react-player": "^2.13.0",
     "react-youtube": "^10.1.0",
     "youtube-caption-extractor": "^1.4.3",
-    "ytdl-core": "^4.11.5"
+    "ytdl-core": "^4.11.5",
+    "sass": "^1.69.3"
   },
   "devDependencies": {
     "@types/node": "^20",
