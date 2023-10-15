@@ -295,8 +295,7 @@ export default function Video() {
             timeStampItems={timeStamps}
           />
           <div className="info-box">
-            <input
-              type="text"
+            <textarea
               value={subtitles?.subtitles
                 .filter((subtitle, index) => {
                   const [startIndex, endIndex] = whatToRender(
@@ -310,6 +309,7 @@ export default function Video() {
               readOnly
               style={{
                 width: "100%",
+                height: "100px"
               }}
             />
           </div>
