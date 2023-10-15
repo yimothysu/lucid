@@ -385,7 +385,7 @@ export default function Video() {
 
   return (
     <main className={styles.main}>
-      <Navbar hideTryNow={true} />
+      <Navbar actionTitle="New Lecture" actionUrl="/retrieve" />
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
           <ReactPlayer
