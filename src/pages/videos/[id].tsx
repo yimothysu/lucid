@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "./video.module.css";
-import { ArrowRight } from "react-feather";
+import { ArrowRight, Mic, MicOff} from "react-feather";
 import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
 import { useRouter } from "next/router";
@@ -369,7 +369,7 @@ export default function Video() {
 
   return (
     <main className={styles.main}>
-      <Navbar />
+      <Navbar hideTryNow = {true}/>
       <div className={styles.topPart}>
         <div className={styles.videoSection}>
           <ReactPlayer
@@ -421,7 +421,7 @@ export default function Video() {
           )}
         </div>
       </div>
-      <form className={styles.questionForm} onSubmit={onSubmit}>
+      <div className={styles.questionForm} onSubmit={onSubmit}>
         <label htmlFor="question" className={styles.questionLabel}>
           Ask a Question
         </label>
@@ -432,19 +432,22 @@ export default function Video() {
           className={styles.questionInput}
           placeholder="Question"
         />
-        <button type="submit" className={styles.questionSubmit}>
+        
+        <div className={styles.buttonContainer}>
+        <button className={styles.questionSubmit} onClick={onSubmit}>
           {submitting ? <Spinner /> : <ArrowRight />}
         </button>
+        <button className={styles.questionMic} onClick={recording ? stopRecording : startRecording}>
+          {recording ? <Mic /> : <MicOff />}
+        </button>
+        </div>
         <div
           style={{
             marginTop: "1rem",
           }}
         ></div>
-      </form>
-      <div className={styles.description}>
-        <button onClick={recording ? stopRecording : startRecording}>
-          {recording ? "Stop Recording" : "Start Recording"}
-        </button>
+      </div>
+      <div>
       </div>
     </main>
   );

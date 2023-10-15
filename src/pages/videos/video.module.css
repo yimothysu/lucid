@@ -36,19 +36,40 @@
   font-size: 1rem;
 }
 
+.buttonContainer {
+    display: flex; /* Use flexbox to create a horizontal layout */
+    align-items: center; /* Vertically center the buttons */
+    margin-top: 5px;
+  }
+
 .questionSubmit {
+    
+  margin-right: 10px;
   padding: 0.25rem 1rem;
   padding-top: 0.4rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  background-color: #57cc02;
-  color: white;
+  background-color: #98eecc;
   width: min-content;
   cursor: pointer;
 }
 
 .questionSubmit:hover {
-  background-color: #8a745f;
+  background-color: #6fd19e;
 }
+
+.questionMic {
+    padding: 0.25rem 1rem;
+    padding-top: 0.4rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #98eecc;
+    width: min-content;
+    cursor: pointer;
+  }
+
+  .questionMic:hover {
+    background-color: #6fd19e;
+  }
+
 
 .videoSection {
   width: 50%;
