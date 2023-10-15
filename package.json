@@ -23,9 +23,9 @@
     "react-feather": "^2.0.10",
     "react-player": "^2.13.0",
     "react-youtube": "^10.1.0",
+    "sass": "^1.69.3",
     "youtube-caption-extractor": "^1.4.3",
-    "ytdl-core": "^4.11.5",
-    "sass": "^1.69.3"
+    "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
     "@types/node": "^20",

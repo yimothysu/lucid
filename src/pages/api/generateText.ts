@@ -1,32 +1,32 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { streamGPT3, callGPT3 } from '../../utils/call-openai';
+import { NextApiRequest, NextApiResponse } from "next";
+import { streamGPT3, callGPT3 } from "../../utils/call-openai";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   let prompt: string;
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     prompt = req.query.prompt as string;
     try {
       // Set headers for SSE
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
       res.flushHeaders();
 
       // Call the streamGPT3 function, and send chunks as they arrive
       for await (const chunk of streamGPT3(prompt)) {
         res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-        console.log("Streaming response written to response: ", chunk);
+        // console.log("Streaming response written to response: ", chunk);
         res.flushHeaders(); // Important for some hosting platforms
       }
 
-      res.write("data: JimSu123!\n\n")
+      res.write("data: JimSu123!\n\n");
       res.end();
     } catch (error) {
       console.error("Streaming error:", error);
       res.write(`data: {"error": "Internal Server Error"}\n\n`);
       res.end();
     }
-  } else if (req.method === 'POST') {
+  } else if (req.method === "POST") {
     prompt = req.body.prompt;
     try {
       const response = await callGPT3(prompt);
