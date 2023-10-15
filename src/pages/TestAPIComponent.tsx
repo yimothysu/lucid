@@ -7,27 +7,21 @@ function TestAPIComponent() {
     const [generatedText, setGeneratedText] = useState('');
     const [sendThingsResult, setSendThingsResult] = useState('');
     const [nonStreamingText, setNonStreamingText] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
 
-    function testGenerateText() {
+    async function testGenerateText() {
         const promptText = "What is a cow?";
-        const es = callGenerateText(promptText);
-
+        const es = await callGenerateText(promptText);
+    
         es.onmessage = function(event) {
             console.log(event.data)
             setGeneratedText(prevText => prevText + event.data);
         };
-
+    
         es.onerror = function(event) {
             console.error("EventSource failed:", event);
             es.close();
         };
-    }
-
-    async function testGenerateTextNonStreaming() {
-        const promptText = "What is a cow?";
-        const response = await callGenerateTextNonStreaming(promptText);
-        const data = await response.json();
-        setNonStreamingText(data.text);
     }
 
     function testSendThings() {
@@ -46,19 +40,19 @@ function TestAPIComponent() {
 
     async function testGenerateImage() {
         const prompt = "Generate an image of a sunset.";
-        const imageUrl = await callGenerateImage(prompt);
+        const imageUrl = await callGenerateImage(prompt, "256x256");
         console.log("Image URL:", imageUrl);
+        setImageUrl(imageUrl);
     }
 
     return (
         <div>
             <button onClick={testGenerateText}>Test Generate Text</button>
-            <button onClick={testGenerateTextNonStreaming}>Test Generate Text Non-Streaming</button>
             <button onClick={testGenerateImage}>Test Generate Image</button>
             <button onClick={testSendThings}>Test Send Things</button>
             <p>{generatedText}</p>
-            <p>{nonStreamingText}</p>
             <p>{sendThingsResult}</p>
+            {imageUrl && <img src={imageUrl} alt="Generated image" />}
         </div>
     );
 }
