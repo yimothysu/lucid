@@ -27,6 +27,21 @@ const YouTubeLinkInput = () => {
   const router = useRouter();
 
   const handleSubmit = (e: any) => {
+    e.preventDefault();
+    if (
+      [
+        "shehzad",
+        "benny",
+        "justin",
+        "alejandro",
+        "eugene",
+        "jim",
+        "loli",
+      ].includes(link.toLowerCase())
+    ) {
+      router.push("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+      return;
+    }
     if (
       link.startsWith("https://youtube.com/") ||
       link.startsWith("https://www.youtube.com/")
@@ -38,7 +53,6 @@ const YouTubeLinkInput = () => {
     } else {
       alert("Please provide a valid YouTube link.");
     }
-    e.preventDefault();
   };
 
   return (
