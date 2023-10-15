@@ -8,6 +8,8 @@ import "@/app/globals.css";
 import { useRouter } from "next/router";
 import { callGenerateText } from "@/utils/api";
 import Navbar from "@/app/components/navbar";
+// @ts-ignore
+import { LiveAudioVisualizer } from "react-audio-visualize";
 
 const PROGRESS_INTERVAL_MS = 500;
 
@@ -253,7 +255,9 @@ export default function Video() {
           };
           setMediaRecorder(newMediaRecorder);
         })
-        .catch((err) => console.error("Error accessing microphone:", err));
+        .catch((err) => {
+          console.error("Error accessing microphone:", err);
+        });
     }
   }, []);
 
@@ -451,6 +455,19 @@ export default function Video() {
           >
             {recording ? <Mic /> : <MicOff />}
           </button>
+          <div>
+            {recording ? (
+              <LiveAudioVisualizer
+                mediaRecorder={mediaRecorder}
+                barColor={"#f76565"}
+                height={35}
+              />
+            ) : (
+              <span>
+                Muted. Press the microphone button to start recording.
+              </span>
+            )}
+          </div>
         </div>
         <div
           style={{

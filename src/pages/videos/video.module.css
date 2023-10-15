@@ -39,11 +39,11 @@
 .buttonContainer {
   display: flex; /* Use flexbox to create a horizontal layout */
   align-items: center; /* Vertically center the buttons */
+  gap: 0.5rem;
   margin-top: 5px;
 }
 
 .questionSubmit {
-  margin-right: 10px;
   padding: 0.25rem 1rem;
   padding-top: 0.4rem;
   border: 1px solid rgba(193, 209, 198, 0.1);
