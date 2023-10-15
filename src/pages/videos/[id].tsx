@@ -268,7 +268,7 @@ export default function Video() {
     }
 
     setSubmitting(true);
-    let llmAnswer = "";
+
     const es = await callGenerateText(question);
     es.onmessage = async (event) => {
       if (event.data === "JimSu123!") {
@@ -279,35 +279,23 @@ export default function Video() {
         addVideoQuestion({
           videoId: videoId,
           question,
-          answer: llmAnswer,
+          answer: currentAnswer,
           timestamp: elapsedTime,
           title: cleanedTitle,
         }).then(() => {
           setTimeStamps([
             ...timeStamps,
-            { timestamp: elapsedTime, question, answer: llmAnswer },
+            { timestamp: elapsedTime, question, answer: currentAnswer },
           ]);
         });
         setSubmitting(false);
         setQuestion("");
-        setCurrentQuestion(question);
-        setCurrentAnswer(llmAnswer);
 
         es.close();
-        return;
       }
-
-      // The event object contains the data sent by the server
-      const eventData = JSON.parse(event.data);
-      llmAnswer += eventData;
-      //console.log("Received event:", eventData);
-
-      // You can update your UI or perform other actions based on the received data
+      setCurrentQuestion(question);
+      setCurrentAnswer((prevText) => prevText + event.data);
     };
-    // for await (const part of stream) {
-    //   llmAnswer += part;
-    //   console.log(llmAnswer);
-    // }
   };
 
   const onReady = (player: any) => {
