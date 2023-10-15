@@ -49,7 +49,7 @@ const YouTubeLinkInput = () => {
       </div>
       <style jsx>{`
         .wrapper {
-          background-color: ${colors.primary};
+          background-color: ${colors.funOffWhite};
           min-height: 100vh;
         }
 
@@ -59,7 +59,7 @@ const YouTubeLinkInput = () => {
           justify-content: center;
           align-items: center;
           height: 80vh;
-          background-color: ${colors.primary};
+          background-color: ${colors.funOffWhite};
         }
 
         .title {
@@ -87,8 +87,8 @@ const YouTubeLinkInput = () => {
           border: none;
           cursor: pointer;
           font-size: 1rem;
-          color: white;
-          background-color: ${colors.background};
+          color: black;
+          background-color: ${colors.secondary};
           padding: 0.5rem 1rem;
           padding-top: 0.7rem;
           height: 100%;
@@ -96,7 +96,7 @@ const YouTubeLinkInput = () => {
         }
 
         .submitButton:hover {
-          background-color: ${colors.backgroundHover};
+          background-color: ${colors.primary};
         }
       `}</style>
     </div>
