@@ -8,6 +8,7 @@ import "@/app/globals.css";
 import { useRouter } from "next/router";
 import { callGenerateText } from "@/utils/api";
 import Navbar from "@/app/components/navbar";
+import Avatar from "react-avatar";
 // @ts-ignore
 import { LiveAudioVisualizer } from "react-audio-visualize";
 import { useTranslation } from "next-i18next";
@@ -41,19 +42,39 @@ function QuestionAnswerPair(props: {
 }) {
   return (
     <div className={styles.questionAnswerPair}>
-      <div className={styles.currentQuestion}>Student</div>
-      <div className={styles.currentQuestionText}>{props.question}</div>
-      <div className={styles.currentAnswer}>AI</div>
-      <div className={styles.currentAnswerText}>
-        {props.answer ? (
-          props.answer
-        ) : props.submitting ? (
-          <i>Generating...</i>
-        ) : (
-          <i>
-            An error occurred while generating an answer to these questions.
-          </i>
-        )}
+      <div className={styles.entry}>
+        <Avatar
+          style={{ aspectRatio: 1 }}
+          size="50"
+          round={true}
+          src="https://graph.facebook.com/100008343750912/picture?width=300&height=300"
+        />
+        <div className="entryRight">
+          <div className={styles.currentQuestion}>Student</div>
+          <div className={styles.currentQuestionText}>{props.question}</div>
+        </div>
+      </div>
+      <div className={styles.entry}>
+        <Avatar
+          style={{ aspectRatio: 1 }}
+          size="50"
+          round={true}
+          src="https://cdn-icons-png.flaticon.com/512/1624/1624640.png"
+        />
+        <div className="entryRight">
+          <div className={styles.currentAnswer}>AI</div>
+          <div className={styles.currentAnswerText}>
+            {props.answer ? (
+              props.answer
+            ) : props.submitting ? (
+              <i>Generating...</i>
+            ) : (
+              <i>
+                An error occurred while generating an answer to these questions.
+              </i>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

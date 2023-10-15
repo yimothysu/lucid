@@ -130,7 +130,6 @@
 
 .currentAnswer {
   font-weight: bold;
-  margin-top: 1rem;
 }
 
 .topPart {
@@ -176,5 +175,11 @@
 }
 
 .questionAnswerPair {
+  margin-bottom: 1rem;
+}
+
+.entry {
+  display: flex;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
