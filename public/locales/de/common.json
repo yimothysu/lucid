@@ -1,0 +1,12 @@
+{
+    "title": "Bildung neu erfunden, eine teuflische Konferenz auf einmal.",
+    "tryButton": "Jetzt ausprobieren",
+    "navBarButton": "Jetzt Ausprobieren",
+    "retrieveText": "Füge den YouTube-Link hier ein",
+    
+    "generatingText": "Generiere...",
+    "generatingError": "Ein Fehler ist beim Generieren einer Antwort auf diese Frage aufgetreten.",
+    "generatingProgress": "Klicke auf die Fortschrittsleiste, um Fragen und Antworten zu sehen",
+    "geneartingAsk": "Stelle eine Frage",
+    "generatedMuted": "Stummgeschaltet. Drücke den Mikrofon-Button, um die Aufnahme zu starten."
+}

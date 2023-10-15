@@ -1,14 +1,31 @@
 "use client";
 
 import Image from "next/image";
-import styles from "./page.module.css";
+import styles from "./index.module.css";
 import { ArrowRight } from "react-feather";
-import theme from "./styles/theme";
+import theme from "../app/styles/theme";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getRandomVideos } from "./firebase/firestore";
+import { getRandomVideos } from "../app/firebase/firestore";
 import Link from "next/link";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+import "src/app/globals.css";
+import Navbar from "@/app/components/navbar";
+import Footer from "@/app/components/footer";
+
+export async function getStaticProps(context: { locale: any }) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
 
 function getThumbnailUrl(videoId: string) {
   return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
@@ -56,6 +73,8 @@ export default function Home() {
 
   const [cards, setCards] = useState<Card[]>([]);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     getRandomVideos().then((randomVideos) => {
       let newCards: Card[] = [];
@@ -89,53 +108,57 @@ export default function Home() {
   }, []);
 
   return (
-    <main className={styles.mainContainer}>
-      <Image
-        className={styles.floatingAnimatedImage}
-        src="/logo-v0.png"
-        alt="logo"
-        width={200}
-        height={200}
-      />
-      <h1>Education reimagined, one lecture at a time.</h1>
-      <button
-        className={styles.actionButton}
-        onClick={() => {
-          setAnimateBackground(true);
-          setTimeout(() => {
-            router.push("/retrieve");
-          }, 200);
-        }}
-        style={{
-          marginTop: "2rem",
-        }}
-      >
-        <span className={styles.actionButton__span}>Try It Now</span>
-        <ArrowRight />
-      </button>
-      <div className={styles.cardsGrid}>
-        {cards.map((card, index) => (
-          <Link href={`/videos/${card.videoId}`} key={card.videoId}>
-            <Card id={index} {...card} />
-          </Link>
-        ))}
-      </div>
-      <motion.div
-        initial={{ scale: 1, opacity: 0 }}
-        animate={animateBackground ? { scale: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.2 }}
-        style={
-          animateBackground
-            ? {
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: theme.colors.primary,
-                position: "absolute",
-                top: 0,
-              }
-            : {}
-        }
-      ></motion.div>
-    </main>
+    <div>
+      <Navbar />
+      <main className={styles.mainContainer}>
+        <Image
+          className={styles.floatingAnimatedImage}
+          src="/logo-v0.png"
+          alt="logo"
+          width={200}
+          height={200}
+        />
+        <h1>{t("title")}</h1>
+        <button
+          className={styles.actionButton}
+          onClick={() => {
+            setAnimateBackground(true);
+            setTimeout(() => {
+              router.push("/retrieve");
+            }, 200);
+          }}
+          style={{
+            marginTop: "2rem",
+          }}
+        >
+          <span className={styles.actionButton__span}>{t("tryButton")}</span>
+          <ArrowRight />
+        </button>
+        <div className={styles.cardsGrid}>
+          {cards.map((card, index) => (
+            <Link href={`/videos/${card.videoId}`} key={card.videoId}>
+              <Card id={index} {...card} />
+            </Link>
+          ))}
+        </div>
+        <motion.div
+          initial={{ scale: 1, opacity: 0 }}
+          animate={animateBackground ? { scale: 1, opacity: 1 } : {}}
+          transition={{ duration: 0.2 }}
+          style={
+            animateBackground
+              ? {
+                  width: "100vw",
+                  height: "100vh",
+                  backgroundColor: theme.colors.primary,
+                  position: "absolute",
+                  top: 0,
+                }
+              : {}
+          }
+        ></motion.div>
+      </main>
+      <Footer />
+    </div>
   );
 }

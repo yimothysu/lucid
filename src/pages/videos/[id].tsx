@@ -10,6 +10,27 @@ import { callGenerateText } from "@/utils/api";
 import Navbar from "@/app/components/navbar";
 // @ts-ignore
 import { LiveAudioVisualizer } from "react-audio-visualize";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+export async function getStaticProps(context: { locale: any }) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: true,
+  };
+}
 
 const PROGRESS_INTERVAL_MS = 500;
 
@@ -188,6 +209,7 @@ export default function Video() {
   const router = useRouter();
   const { id } = router.query;
   const videoId = id;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -255,6 +277,27 @@ export default function Video() {
     }
   }, []);
 
+  const lang = "en";
+
+  useEffect(() => {
+    const fetchSubtitles = async (videoID = id) => {
+      try {
+        const response = await fetch(
+          `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
+        );
+        //console.log("Here!");
+        const data = await response.json();
+        //console.log(data);
+
+        setSubtitles(data);
+      } catch (error) {
+        console.error("Error fetching subtitles:", error);
+      }
+    };
+
+    fetchSubtitles();
+  }, [id, lang]);
+
   useEffect(() => {
     if (!videoId || Array.isArray(videoId)) {
       return;
@@ -267,25 +310,6 @@ export default function Video() {
   if (!videoId) {
     return <main className={styles.main}></main>;
   }
-
-  const lang = "en";
-
-  const fetchSubtitles = async (videoID = id) => {
-    try {
-      const response = await fetch(
-        `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
-      );
-      //console.log("Here!");
-      const data = await response.json();
-      //console.log(data);
-
-      setSubtitles(data);
-    } catch (error) {
-      console.error("Error fetching subtitles:", error);
-    }
-  };
-
-  fetchSubtitles();
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -381,8 +405,6 @@ export default function Video() {
     }
   }
 
-  //console.log(intervals);
-
   return (
     <main className={styles.main}>
       <Navbar hideTryNow={true} />
@@ -425,23 +447,20 @@ export default function Video() {
                 {currentAnswer ? (
                   currentAnswer
                 ) : submitting ? (
-                  <i>Generating...</i>
+                  <i>{t("generatingText")}</i>
                 ) : (
-                  <i>
-                    An error occurred while generating an answer to this
-                    question.
-                  </i>
+                  <i>{t("generatingError")}</i>
                 )}
               </div>
             </>
           ) : (
-            <div>Click on the progress bar to see questions and answers</div>
+            <div>{t("generatingProgress")}</div>
           )}
         </div>
       </div>
       <div className={styles.questionForm} onSubmit={onSubmit}>
         <label htmlFor="question" className={styles.questionLabel}>
-          Ask a Question
+          {t("geneartingAsk")}
         </label>
         <textarea
           id="question"
@@ -469,9 +488,7 @@ export default function Video() {
                 height={35}
               />
             ) : (
-              <span>
-                Muted. Press the microphone button to start recording.
-              </span>
+              <span>{t("generatedMuted")}</span>
             )}
           </div>
         </div>
