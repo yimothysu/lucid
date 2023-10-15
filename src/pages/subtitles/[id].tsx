@@ -24,9 +24,10 @@ export default function Subtitles () {
     
     const [subtitles, setSubtitles] = useState<subItems>();
 
+    const lang = 'en'
 
     useEffect(() => {
-        const fetchSubtitles = async (videoID = id, lang = 'en') => {
+        const fetchSubtitles = async (videoID = id) => {
           try {
             const response = await fetch(
               `/api/fetch-subtitles?videoID=${videoID}&lang=${lang}`
@@ -49,9 +50,8 @@ export default function Subtitles () {
         <div>
             {subtitles ? (
         <div>
-          <h1>Subtitles: 
-          {subtitles.subtitles.map((subtitle, index) => (
-          <span key={index}>{subtitle.text.replace(/\[.*\]/g, "")} </span>))} </h1>
+          <h1>Subtitles: {JSON.stringify(subtitles)}
+          </h1>
           
         </div>
       ) : (
@@ -63,3 +63,5 @@ export default function Subtitles () {
 
 
 
+/*{subtitles.subtitles.map((subtitle, index) => (
+          <span key={index}>{subtitle.text.replace(/\[.*\]/g, "")} </span>))} */
