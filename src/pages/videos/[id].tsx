@@ -247,16 +247,6 @@ export default function Video() {
           {submitting ? <Spinner /> : <ArrowRight />}
         </button>
       </form>
-      {timeStamps &&
-        timeStamps.map((pair, index) => {
-          return (
-            <QuestionAndAnswer
-              key={`${index}`}
-              question={pair.question}
-              answer={pair.answer}
-            />
-          );
-        })}
     </main>
   );
 }
