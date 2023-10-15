@@ -19,6 +19,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.flushHeaders(); // Important for some hosting platforms
       }
 
+      res.write("data: JimSu123!\n\n")
       res.end();
     } catch (error) {
       console.error("Streaming error:", error);

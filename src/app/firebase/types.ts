@@ -3,6 +3,7 @@ export type addVideoType = {
   timestamp: number;
   question: string;
   answer: string;
+  title: string;
 };
 
 export type QuestionAnswerPair = {
@@ -13,6 +14,7 @@ export type QuestionAnswerPair = {
 
 export type QuestionAnswerPairs = {
   questionAnswerPairs: QuestionAnswerPair[];
+  title: string;
 };
 
 export type GetRandomVideo = QuestionAnswerPairs & {

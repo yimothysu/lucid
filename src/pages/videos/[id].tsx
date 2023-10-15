@@ -6,6 +6,7 @@ import { ArrowRight } from "react-feather";
 import { addVideoQuestion, getVideoTimeStamps } from "@/app/firebase/firestore";
 import "@/app/globals.css";
 import { useRouter } from "next/router";
+import { callGenerateText } from "@/utils/api";
 
 const PROGRESS_INTERVAL_MS = 500;
 
@@ -38,6 +39,40 @@ interface Timestamp {
   question: string;
   answer: string;
 }
+
+const Spinner = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="10" stroke-dasharray="63" stroke-dashoffset="21">
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 12 12"
+        to="360 12 12"
+        dur="1.5s"
+        repeatCount="indefinite"
+      />
+      <animate
+        attributeName="stroke-dashoffset"
+        dur="8s"
+        repeatCount="indefinite"
+        keyTimes="0; 0.5; 1"
+        values="-16; -47; -16"
+        calcMode="spline"
+        keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+      />
+    </circle>
+  </svg>
+);
 
 function ProgressBar(props: ProgressBarProps) {
   return (
@@ -77,7 +112,7 @@ export default function Video() {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [question, setQuestion] = useState<string>("");
-  const [answer, setAnswer] = useState<string>("Answer");
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
@@ -101,22 +136,53 @@ export default function Video() {
     return <main className={styles.main}></main>;
   }
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     if (!videoId || Array.isArray(videoId)) {
       return;
     }
-    addVideoQuestion({
-      videoId: videoId,
-      question,
-      answer,
-      timestamp: elapsedTime,
-    }).then(() => {
-      setTimeStamps([
-        ...timeStamps,
-        { timestamp: elapsedTime, question, answer },
-      ]);
-    });
+
+    setSubmitting(true);
+    let llmAnswer = "";
+    const es = await callGenerateText(question);
+    es.onmessage = async (event) => {
+      if (event.data === "JimSu123!") {
+        const titleResp = await fetch(`/api/ytTitle?videoId=${id}`);
+        const title = await titleResp.text();
+        const cleanedTitle = title.substring(1, title.length - 1);
+
+        addVideoQuestion({
+          videoId: videoId,
+          question,
+          answer: llmAnswer,
+          timestamp: elapsedTime,
+          title: cleanedTitle,
+        }).then(() => {
+          setTimeStamps([
+            ...timeStamps,
+            { timestamp: elapsedTime, question, answer: llmAnswer },
+          ]);
+        });
+        setSubmitting(false);
+        setQuestion("");
+        setCurrentQuestion(question);
+        setCurrentAnswer(llmAnswer);
+
+        es.close();
+        return;
+      }
+
+      // The event object contains the data sent by the server
+      const eventData = JSON.parse(event.data);
+      llmAnswer += eventData;
+      console.log("Received event:", eventData);
+
+      // You can update your UI or perform other actions based on the received data
+    };
+    // for await (const part of stream) {
+    //   llmAnswer += part;
+    //   console.log(llmAnswer);
+    // }
   };
 
   const onReady = (player: any) => {
@@ -183,19 +249,14 @@ export default function Video() {
           placeholder="Question"
         />
         <button type="submit" className={styles.questionSubmit}>
-          <ArrowRight />
+          {submitting ? <Spinner /> : <ArrowRight />}
         </button>
+        <div
+          style={{
+            marginTop: "1rem",
+          }}
+        ></div>
       </form>
-      {timeStamps &&
-        timeStamps.map((pair, index) => {
-          return (
-            <QuestionAndAnswer
-              key={`${index}`}
-              question={pair.question}
-              answer={pair.answer}
-            />
-          );
-        })}
     </main>
   );
 }
